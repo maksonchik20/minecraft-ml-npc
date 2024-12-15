@@ -1,0 +1,25 @@
+{
+  "name": "minecraft-ml-npc",
+  "version": "1.0.0",
+  "description": "Project Minectaft",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maksonchik20/minecraft-ml-npc.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/maksonchik20/minecraft-ml-npc/issues"
+  },
+  "homepage": "https://github.com/maksonchik20/minecraft-ml-npc#readme",
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "mineflayer": "^4.23.0",
+    "mineflayer-pathfinder": "^2.4.5"
+  }
+}
