@@ -1,6 +1,15 @@
 from javascript import require, On
+import datetime
+import sys
 mineflayer = require('mineflayer')
 pathfinder = require('mineflayer-pathfinder')
+
+print('Starting logs')
+
+logFile = open(file=f'logs/log_{datetime.datetime.now().strftime('%Y_%m_%d %H_%M_%S')}.txt', mode='w', encoding='utf-8')
+
+sys.stdout = logFile
+sys.stderr = logFile
 
 RANGE_GOAL = 1
 BOT_USERNAME = 'python'
