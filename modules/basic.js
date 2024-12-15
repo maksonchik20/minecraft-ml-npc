@@ -1,0 +1,160 @@
+const Vec3 = require('vec3').Vec3
+const { entityAtEntityCursor } = require('./functions.js')
+
+async function add(bot) {
+    bot.behaviors = {}
+
+    bot.behaviors.basic = {}
+
+    require('./following.js')(bot)
+
+    let currentCycle = 0
+    let lookTimeout = null
+    let lookToFar = 0
+    const minCycles = 3
+
+    bot.behaviors.basic.target = null
+    bot.behaviors.walking = false
+
+    bot.behaviors.basic.isLookingFor = () => {
+        return bot.behaviors.basic.target != null
+    }
+
+    bot.behaviors.basic.canLook = () => {
+        return !bot.behaviors.walking;
+    }
+
+    bot.behaviors.basic.stopLooking = () => {
+        bot.behaviors.basic.target = null;
+        clearInterval(lookTimeout);
+    }
+
+    bot.on('goal_reached', () => {
+        bot.behaviors.walking = false
+    })
+
+    bot.on('goal_updated', () => {
+        bot.behaviors.walking = true
+    })
+
+    function distance(a, b) {
+        let dx = a.x - b.x
+        let dy = a.y - b.y
+        let dz = a.z - b.z
+        return Math.sqrt(dx * dx + dy * dy + dz * dz)
+    }
+
+    async function look() {
+        if(!bot.behaviors.basic.canLook())
+            return
+        if(bot.behaviors.basic.target == null)
+            return
+        bot.lookAt(bot.behaviors.basic.target.position.offset(0, bot.behaviors.basic.target.eyeHeight, 0))
+        if(distance(bot.behaviors.basic.target.position, bot.player.entity.position) > 7.5) {
+            if(lookToFar > 50)
+                bot.behaviors.basic.stopLooking()
+            lookToFar++
+        } else {
+            lookToFar = 0;
+        }
+    }
+
+    async function lookingPolling() {
+        if(bot.behaviors.basic.isLookingFor()) {
+            console.log('Checking interest point')
+            let prefferedChance = 0.0;
+
+            if(entityAtEntityCursor(bot, bot.behaviors.basic.target) == bot.player.entity) {
+                prefferedChance = 0.1;
+            }
+
+            if(bot.behaviors.follow.target == bot.behaviors.basic.target) {
+                prefferedChance = 0.5;
+            }
+
+            if(Math.random() < prefferedChance) {
+                currentCycle = 0;
+                console.log('Reintrested in point!');
+            }
+
+            if(currentCycle >= minCycles) {
+                let chanceOfDeselecting = Math.pow(1.7, currentCycle - minCycles) / 100.0
+                if(Math.random() < chanceOfDeselecting) {
+                    bot.behaviors.basic.target = null;
+                    clearInterval(lookTimeout);
+                }
+            }
+            currentCycle++
+        } else {
+
+            if(bot.behaviors.basic.canLook()) {
+                bot.look(bot.player.entity.yaw, 0.0);
+            }
+
+            console.log('Selecting next target...')
+            
+            let selected = null
+            let chanceOfSelecting = 0.05
+            let prefferedChance = 0.9
+
+            let preffered = null
+
+            let parts = []
+            let val = Object.values(bot.entities)
+            val.forEach((value) => {
+                if(value == undefined)
+                    return
+                if(value.username === bot.username)
+                    return
+                if(distance(bot.player.entity.position, value.position) < 5.0) {
+                    if(entityAtEntityCursor(bot, value) == bot.player.entity) {
+                        console.log('He is looking at me!');
+                        if(preffered == null) {
+                            preffered = value;
+                            chanceOfSelecting = 0.3
+                            return;
+                        } else if (distance(bot.player.entity.position, preffered.position) > distance(bot.player.entity.position, value.position)){
+                            parts.push(preffered);
+                            preffered = value;
+                            return;
+                        }
+                    }
+                    parts.push(value)
+                }
+            })
+
+            if(bot.behaviors.follow.isFollowing()) {
+                preffered = bot.behaviors.follow.target;
+                prefferedChance = 0.9;
+            }
+
+            if(preffered == null) {
+                if(parts.length != 0) {
+                    pos = Math.floor(Math.random() * parts.length)
+                    selected = parts[pos]
+                }
+            } else {
+                if(Math.random() < 0.9 || parts.length == 0) {
+                    selected = preffered
+                    chanceOfSelecting = 0.6
+                } else {
+                    pos = Math.floor(Math.random() * parts.length)
+                    selected = parts[pos]
+                }
+            }
+
+            if(Math.random() < chanceOfSelecting && selected != null) {
+                console.log('Started looking at!')
+                currentCycle = 0
+                lookToFar = 0
+                bot.behaviors.basic.target = selected
+                lookTimeout = setInterval(look, 50)
+            }
+        }
+    }
+
+    setInterval(lookingPolling, 500)
+
+}
+
+module.exports = add
