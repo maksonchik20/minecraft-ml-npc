@@ -1,6 +1,6 @@
 const { goals: { GoalNear } } = require('mineflayer-pathfinder');
 
-function add(bot) {
+function add(console, bot) {
 
     let rangeFollow = 3
     let followPoll = null
@@ -43,6 +43,10 @@ function add(bot) {
             bot.chat('Here you are!');
             bot.behaviors.follow.target = entity;
         }
+    })
+
+    bot.on('end', () => {
+        clearInterval(followPoll);
     })
 
 

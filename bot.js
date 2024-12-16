@@ -2,25 +2,12 @@ const mineflayer = require('mineflayer');
 const { pathfinder } = require('mineflayer-pathfinder');
 const behaviors = require('./modules/loadBehaviors.js')
 const fs = require('fs/promises');
+const { createConsole } = require('./modules/functions.js');
 
 let bot = undefined;
+let console = undefined;
 
-async function createBot(config) {
-
-    bot = mineflayer.createBot(config.settings)
-
-    bot.loadPlugin(pathfinder)
-    bot.loadPlugin(behaviors)
-
-    config.additionalBehaviors.forEach(behavior => {
-        behavior(bot)
-    });
-    return bot
-}
-
-
-
-async function main() {
+async function startLogs() {
     let date = new Date();
     let logFileName = `logs/log_${date.getFullYear()}_${date.getMonth() + 1}_${date.getDate()} ${date.getHours()}_${date.getMinutes()}_${date.getSeconds()}.txt`;
 
@@ -33,16 +20,42 @@ async function main() {
     process.on('uncaughtException', function(err) {
         console.error((err && err.stack) ? err.stack : err);
     });
+}
+
+async function createBot(config) {
+
+    bot = mineflayer.createBot(config.settings)
+
+    bot.on('end', (res) => {
+        console.error('bot ended because of ' + res)
+
+        createBot(config)
+    })
+
+    bot.loadPlugin(pathfinder)
+
+    bot.once('inject_allowed', () => {
+        behaviors(createConsole(console, 'Default behaviors'), bot)
+
+        config.additionalBehaviors.forEach(behaviorObj => {
+            behaviorObj.behavior(createConsole(console, behaviorObj.name), bot)
+        });
+    })
+
+    return bot
+}
+
+async function main() {
+
+    console = createConsole(global.console, 'Bot')
+
+    await startLogs();
 
     require('dotenv').config();
 
     root = process.env.CURRENT_BOT ? process.env.CURRENT_BOT : 'Default'
     const config = require(`./bots/${root}/settings.js`);
     bot = await createBot(config)
-
-    bot.on('end', (reason) => {
-        //TODO: make it reconnect!
-    })
 }
 
 main()
