@@ -10,6 +10,8 @@ server/plugins/*
 !server/plugins/SkinsRestorer
 server/plugins/SkinsRestorer/*
 !server/plugins/SkinsRestorer/skins
+server/plugins/SkinsRestorer/skins/*.playerskin
+server/plugins/SkinsRestorer/skins/*.urlskin
 !server/plugins/*.jar
 server/versions
 server/world*
