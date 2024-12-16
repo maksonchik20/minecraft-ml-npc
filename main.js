@@ -1,8 +1,9 @@
 const mineflayer = require('mineflayer');
+const { mineflayer: mineflayerViewer } = require('prismarine-viewer')
 const { pathfinder, Movements, goals: { GoalNear } } = require('mineflayer-pathfinder');
 const behaviors = require('./modules/loadBehaviors.js')
 const {attackPlayer, attackEntity} = require('./modules/functions.js')
-const { sayItems, equipItem, unequipItem, tossItem} = require('./modules/inventory')
+const { sayItems, equipItem, unequipItem, tossItem, craftItem} = require('./modules/inventory')
 const fs = require('fs/promises');
 
 let bot = undefined;
@@ -24,9 +25,9 @@ async function createBot() {
     require('dotenv').config();
 
     bot = mineflayer.createBot({
-        host: process.env.HOST ? process.env.HOST : 'localhost',
+        host: process.env.HOST ? process.env.HOST : '10.82.95.41',
         port: process.env.PORT ? process.env.PORT : 25565,
-        username: process.env.BOT_USERNAME ? process.env.BOT_USERNAME : 'Bot'
+        username: process.env.BOT_USERNAME ? process.env.BOT_USERNAME : 'SomeBot'
     })
 
     bot.loadPlugin(pathfinder)
