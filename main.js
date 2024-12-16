@@ -1,4 +1,5 @@
 const mineflayer = require('mineflayer');
+const { mineflayer: mineflayerViewer } = require('prismarine-viewer')
 const { pathfinder, Movements, goals: { GoalNear } } = require('mineflayer-pathfinder');
 const behaviors = require('./modules/basic.js')
 const {attackPlayer, attackEntity} = require('./modules/functions.js')
@@ -35,6 +36,7 @@ async function startBot() {
 
 
     bot.once('spawn', async () => {
+        mineflayerViewer(bot, {port:3000, firstPerson:true})
         let defaultMove = new Movements(bot)
         bot.pathfinder.setMovements(defaultMove)
         bot.on('chat', (username, message) => {
