@@ -59,7 +59,7 @@ async function attackPlayer(bot, username) {
     }
 }
 
-function attackEntity (bot) {
+function attackEntity(bot) {
     const entity = bot.nearestEntity()
     if (!entity) {
         bot.chat('No entity to attack')
@@ -67,6 +67,13 @@ function attackEntity (bot) {
         bot.chat(`Found entity ${entity.name ?? entity.username}`)
         bot.attack(entity)
     }
+}
+
+function guardArea(pos) {
+  guardPos = pos
+  if (!bot.pvp.target) {
+    moveToGuardPos()
+  }
 }
 
 function sleep (ms) {
