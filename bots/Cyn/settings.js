@@ -5,6 +5,7 @@ module.exports = {
         username: 'Cyn'
     },
     additionalBehaviors: [
-        {name: 'hello', behavior: require('./hello')}
+        {name: 'hello', behavior: require('./hello')},
+        {name: 'customInterest', behavior: require('./customInterest')}
     ]
 }

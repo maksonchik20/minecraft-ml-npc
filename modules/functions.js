@@ -47,7 +47,7 @@ function entityAtEntityCursor(bot, sightEntity, maxDistance=3.5, matcher=null) {
     return targetEntity
 }
 
-function isEntityIntrested(bot, entity) {
+function isEntityLookingAtBot(bot, entity) {
     return entityAtEntityCursor(bot, entity, 5.0) == bot.player.entity
 }
 
@@ -97,13 +97,10 @@ function createConsole(console, name) {
     return nwConsole
 }
 
-
-
-
 module.exports = {
     entityAtEntityCursor: entityAtEntityCursor,
     attackPlayer: attackPlayer,
     attackEntity: attackEntity,
     createConsole: createConsole,
-    isEntityIntrested: isEntityIntrested
+    isEntityLookingAtBot: isEntityLookingAtBot
 }
