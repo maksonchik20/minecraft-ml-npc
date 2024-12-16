@@ -82,6 +82,7 @@ async function craftItem(bot, name, amount) {
   }
 }
 
+
 function itemToString (item) {
     if (item) {
         return `${item.name} x ${item.count}`

@@ -1,4 +1,5 @@
 const mineflayer = require('mineflayer');
+const { mineflayer: mineflayerViewer } = require('prismarine-viewer')
 const { pathfinder, Movements, goals: { GoalNear } } = require('mineflayer-pathfinder');
 const behaviors = require('./modules/basic.js')
 const {attackPlayer, attackEntity} = require('./modules/functions.js')
@@ -30,9 +31,9 @@ async function startBot() {
     require('dotenv').config();
 
     bot = mineflayer.createBot({
-        host: process.env.HOST ? process.env.HOST : 'localhost',
+        host: process.env.HOST ? process.env.HOST : '10.82.95.41',
         port: process.env.PORT ? process.env.PORT : 25565,
-        username: process.env.BOT_USERNAME ? process.env.BOT_USERNAME : 'Bot'
+        username: process.env.BOT_USERNAME ? process.env.BOT_USERNAME : 'SomeBot'
     })
 
     bot.loadPlugin(pathfinder)
@@ -41,6 +42,7 @@ async function startBot() {
 
 
     bot.once('spawn', async () => {
+        mineflayerViewer(bot, {port:3000, firstPerson:true})
         let defaultMove = new Movements(bot)
         bot.pathfinder.setMovements(defaultMove)
         bot.on('chat', (username, message) => {
@@ -76,7 +78,7 @@ async function startBot() {
                 unequipItem(bot, command[1])
             }
             if (/^toss \d+ \w+$/.test(message)) {
-                // example: toss 52 diamond+
+                // example: toss 52 diamond
                 tossItem(bot, command[2], command[1])
             }
             if (/^toss \w+$/.test(message)) {
