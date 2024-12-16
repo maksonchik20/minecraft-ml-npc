@@ -1,6 +1,6 @@
 const { goals: { GoalNear } } = require('mineflayer-pathfinder');
 
-async function add(bot) {
+function add(bot) {
 
     let rangeFollow = 3
     let followPoll = null
