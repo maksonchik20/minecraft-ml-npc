@@ -1,6 +1,8 @@
 const mineflayer = require('mineflayer');
 const { pathfinder, Movements, goals: { GoalNear } } = require('mineflayer-pathfinder');
 const behaviors = require('./modules/basic.js')
+const {attackPlayer, attackEntity} = require('./modules/functions.js')
+const { sayItems, equipItem} = require('./modules/inventory')
 const fs = require('fs/promises');
 
 let bot = undefined;
@@ -24,27 +26,45 @@ async function startBot() {
     bot = mineflayer.createBot({
         host: process.env.HOST ? process.env.HOST : 'localhost',
         port: process.env.PORT ? process.env.PORT : 25565,
-        username: process.env.BOT_USERNAME ? process.env.BOT_USERNAME : 'JSBot'
+        username: process.env.BOT_USERNAME ? process.env.BOT_USERNAME : 'Bot'
     })
 
     bot.loadPlugin(pathfinder)
     bot.loadPlugin(behaviors);
 
-    bot.once('spawn', () => {
+
+
+    bot.once('spawn', async () => {
         let defaultMove = new Movements(bot)
         bot.pathfinder.setMovements(defaultMove)
-    
         bot.on('chat', (username, message) => {
             if (username === bot.username) return
+            const command = message.split(' ')
             if (message === 'come with me') {
                 console.log('start following ' + username)
                 let target = bot.players[username]?.entity
-                if(target != undefined)
+                if(target !== undefined)
                     bot.behaviors.follow.startFollowing(target)
             }
             if (message === 'stop following') {
                 console.log('stop following')
                 bot.behaviors.follow.stopFollowing()
+            }
+            if (message === 'attack me') {
+                attackPlayer(bot, username)
+                console.log('attacking me')
+            }
+            else if (message === 'attack') {
+                attackEntity(bot);
+                console.log('attack someone')
+            }
+            if (message === 'say items') {
+                sayItems(bot)
+                console.log('saying items')
+            }
+            if (/^equip [\w-]+ \w+$/.test(message)) {
+                console.log(command[2], command[1])
+                equipItem(bot, command[2], command[1])
             }
         })
     })

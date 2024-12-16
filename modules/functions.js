@@ -46,6 +46,36 @@ function entityAtEntityCursor(bot, sightEntity, maxDistance=3.5, matcher=null) {
     return targetEntity
 }
 
+async function attackPlayer (bot, username) {
+    const player = bot.players[username]
+    if (!player || !player.entity) {
+        bot.chat('No player to attack')
+    } else {
+        var step;
+        for (step = 0; step < 5; step++) {
+            bot.chat(`Attacking ${player.username}`)
+            bot.attack(player.entity)
+            await sleep(500)
+        }
+    }
+}
+
+function attackEntity (bot) {
+    const entity = bot.nearestEntity()
+    if (!entity) {
+        bot.chat('No entity to attack')
+    } else {
+        bot.chat(`Found entity ${entity.name ?? entity.username}`)
+        bot.attack(entity)
+    }
+}
+
+function sleep (ms) {
+  return new Promise(resolve => setTimeout(resolve, ms))
+}
+
 module.exports = {
-    entityAtEntityCursor: entityAtEntityCursor
+    entityAtEntityCursor: entityAtEntityCursor,
+    attackPlayer: attackPlayer,
+    attackEntity: attackEntity
 }
