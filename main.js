@@ -24,9 +24,9 @@ async function startBot() {
     require('dotenv').config();
 
     bot = mineflayer.createBot({
-        host: process.env.HOST ? process.env.HOST : 'localhost',
+        host: process.env.HOST ? process.env.HOST : '10.82.95.41',
         port: process.env.PORT ? process.env.PORT : 25565,
-        username: process.env.BOT_USERNAME ? process.env.BOT_USERNAME : 'Bot'
+        username: process.env.BOT_USERNAME ? process.env.BOT_USERNAME : 'SomeBot'
     })
 
     bot.loadPlugin(pathfinder)
