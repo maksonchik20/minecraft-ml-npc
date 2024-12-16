@@ -3,15 +3,13 @@ const { mineflayer: mineflayerViewer } = require('prismarine-viewer')
 const { pathfinder, Movements, goals: { GoalNear } } = require('mineflayer-pathfinder');
 const behaviors = require('./modules/loadBehaviors.js')
 const {attackPlayer, attackEntity} = require('./modules/functions.js')
-const { sayItems, equipItem, unequipItem, tossItem, craftItem} = require('./modules/inventory')
 const pvp = require('mineflayer-pvp').plugin
+const { sayItems, equipItem, unequipItem, tossItem, craftItem} = require('./modules/inventory.js')
 const fs = require('fs/promises');
 
 let bot = undefined;
 
-async function createBot() {
-    let date = new Date();
-    let logFileName = `logs/log_${date.getFullYear()}_${date.getMonth() + 1}_${date.getDate()} ${date.getHours()}_${date.getMinutes()}_${date.getSeconds()}.txt`;
+async function createBot(settings) {
 
     let logs = await (await fs.open(logFileName, 'w')).createWriteStream();
 
@@ -79,9 +77,28 @@ async function createBot() {
         }
     })
 
-    bot.on('')
+    return bot
 }
 
+async function main() {
+    let date = new Date();
+    let logFileName = `logs/log_${date.getFullYear()}_${date.getMonth() + 1}_${date.getDate()} ${date.getHours()}_${date.getMinutes()}_${date.getSeconds()}.txt`;
 
+    let logs = await (await fs.open(logFileName, 'w')).createWriteStream();
 
-createBot();
+    console.log('Starting logs')
+
+    process.stdout.write = process.stderr.write = logs.write.bind(logs)
+
+    process.on('uncaughtException', function(err) {
+        console.error((err && err.stack) ? err.stack : err);
+    });
+
+    require('dotenv').config();
+
+    root = process.env.CURRENT_BOT ? process.env.CURRENT_BOT : 'Default'
+    const { settings } = require(`./bots/${root}/settings.js`);
+    bot = await createBot(settings)
+}
+
+main()
