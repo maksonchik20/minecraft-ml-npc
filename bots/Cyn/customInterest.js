@@ -56,6 +56,7 @@ function add(console, bot) {
 
     bot.behaviors.looking.preferSelectingFuncs.push(() => {
         let preffered = null;
+        let prefferedCycles = 0;
         let prefferedChance = 0.6;
         let chanceOfPrefferedSelecting = 0.8;
 
@@ -68,9 +69,11 @@ function add(console, bot) {
                 console.log('Interest back!')
                 if(preffered == null) {
                     preffered = value.entity;
+                    prefferedCycles = value.cycles
                     return;
-                } else if (bot.player.entity.position.distanceTo(preffered.position) > bot.player.entity.position.distanceTo(value.entity.position)){
+                } else if (value.cycles > preffered.cycles){
                     preffered = value.entity;
+                    prefferedCycles = value.cycles
                     return;
                 }
             }

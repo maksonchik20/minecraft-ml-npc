@@ -97,9 +97,6 @@ function createConsole(console, name) {
     return nwConsole
 }
 
-
-
-
 module.exports = {
     entityAtEntityCursor: entityAtEntityCursor,
     attackPlayer: attackPlayer,
