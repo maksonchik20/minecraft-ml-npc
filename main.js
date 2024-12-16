@@ -3,7 +3,7 @@ const { mineflayer: mineflayerViewer } = require('prismarine-viewer')
 const { pathfinder, Movements, goals: { GoalNear } } = require('mineflayer-pathfinder');
 const behaviors = require('./modules/basic.js')
 const {attackPlayer, attackEntity} = require('./modules/functions.js')
-const { sayItems, equipItem, unequipItem, tossItem} = require('./modules/inventory')
+const { sayItems, equipItem, unequipItem, tossItem, craftItem} = require('./modules/inventory')
 const fs = require('fs/promises');
 
 let bot = undefined;
@@ -77,6 +77,10 @@ async function startBot() {
             }
             if (/^toss \w+$/.test(message)) {
                 tossItem(bot, command[1])
+            }
+            if (/^craft \d+ \w+$/.test(message)) {
+                // example: craft 64 stick
+                craftItem(bot, command[2], command[1])
             }
         })
     })
