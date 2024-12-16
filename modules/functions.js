@@ -69,16 +69,12 @@ function attackEntity(bot) {
     }
 }
 
-function guardArea(pos) {
-  guardPos = pos
-  if (!bot.pvp.target) {
-    moveToGuardPos()
-  }
-}
-
 function sleep (ms) {
   return new Promise(resolve => setTimeout(resolve, ms))
 }
+
+
+
 
 module.exports = {
     entityAtEntityCursor: entityAtEntityCursor,

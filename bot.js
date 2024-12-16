@@ -5,36 +5,24 @@ const behaviors = require('./modules/loadBehaviors.js')
 const {attackPlayer, attackEntity} = require('./modules/functions.js')
 const pvp = require('mineflayer-pvp').plugin
 const { sayItems, equipItem, unequipItem, tossItem, craftItem} = require('./modules/inventory.js')
+const { guardArea } = require('./bots/Maksim/guard.js')
 const fs = require('fs/promises');
 
 let bot = undefined;
 
 async function createBot(settings) {
-
-    let logs = await (await fs.open(logFileName, 'w')).createWriteStream();
-
-    console.log('Starting logs')
-    process.stdout.write = process.stderr.write = logs.write.bind(logs)
-
-    process.on('uncaughtException', function(err) {
-        console.error((err && err.stack) ? err.stack : err);
-    });
-
-    require('dotenv').config();
-
-    bot = mineflayer.createBot({
-        host: process.env.HOST ? process.env.HOST : '10.82.95.41',
-        port: process.env.PORT ? process.env.PORT : 25565,
-        username: process.env.BOT_USERNAME ? process.env.BOT_USERNAME : 'SomeBot'
-    })
-    bot.loadPlugin(pathfinder)
+    bot = mineflayer.createBot(settings)
+    bot.loadPlugin(pathfinder);
     bot.loadPlugin(behaviors);
-    bot.loadPlugin(pvp)
+    bot.loadPlugin(pvp);
+    bot.guardPos = null;
 
     bot.on('spawn', async () => {
         let defaultMove = new Movements(bot)
         bot.pathfinder.setMovements(defaultMove)
     })
+
+    
 
     bot.on('chat', (username, message) => {
         if (username === bot.username) return
@@ -75,10 +63,46 @@ async function createBot(settings) {
         if (/^toss \w+$/.test(message)) {
             tossItem(bot, command[1])
         }
-    })
+        if (message === 'guard') {
+            const player = bot.players[username]
 
+            if (!player) {
+            bot.chat("I can't see you.")
+            return
+            }
+
+            bot.chat('I will guard that location.')
+            guardArea(bot, player.entity.position)
+        }
+
+        if (message === 'stop guard') {
+            bot.chat('I will no longer guard this area.')
+            stopGuarding(bot)
+        }
+    })
+    bot.on('stoppedAttacking', () => {
+        if (bot.guardPos) {
+          moveToGuardPos(bot)
+        }
+    })
+      
+    bot.on('physicsTick', () => {
+        if (!bot.guardPos) return // Do nothing if bot is not guarding anything
+      
+        // Only look for mobs within 16 blocks
+        const filter = e => e.type === 'mob' && e.position.distanceTo(bot.entity.position) < 16 &&
+                          e.displayName !== 'Armor Stand' // Mojang classifies armor stands as mobs for some reason?
+      
+        const entity = bot.nearestEntity(filter)
+        if (entity) {
+          // Start attacking
+          bot.pvp.attack(entity)
+        }
+    })
     return bot
 }
+
+
 
 async function main() {
     let date = new Date();
