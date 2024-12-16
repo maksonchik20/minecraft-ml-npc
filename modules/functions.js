@@ -1,5 +1,7 @@
 const { Vec3 } = require('vec3')
 const { RaycastIterator } = require('prismarine-world').iterators
+const mc = require('minecraft-protocol')
+const { testedVersions, latestSupportedVersion, oldestSupportedVersion } = require('mineflayer')
 
 function getViewDirection (pitch, yaw) {
     const csPitch = Math.cos(pitch)
@@ -42,8 +44,11 @@ function entityAtEntityCursor(bot, sightEntity, maxDistance=3.5, matcher=null) {
         }
       }
     }
-
     return targetEntity
+}
+
+function isEntityIntrested(bot, entity) {
+    return entityAtEntityCursor(bot, entity, 5.0) == bot.player.entity
 }
 
 async function attackPlayer (bot, username) {
@@ -60,7 +65,7 @@ async function attackPlayer (bot, username) {
     }
 }
 
-function attackEntity (bot) {
+function attackEntity(bot) {
     const entity = bot.nearestEntity()
     if (!entity) {
         bot.chat('No entity to attack')
@@ -71,11 +76,34 @@ function attackEntity (bot) {
 }
 
 function sleep (ms) {
-  return new Promise(resolve => setTimeout(resolve, ms))
+    return new Promise(resolve => setTimeout(resolve, ms))
 }
+
+function createConsole(console, name) {
+    nwConsole = {};
+    nwConsole.log = (message, ...args) => {
+        if(args != null && args.length != 0)
+            console.log(`[${name}] ${message}`, args)
+        else
+            console.log(`[${name}] ${message}`)
+    }
+    nwConsole.error = (message, ...args) => {
+        if(args != null && args.length != 0)
+            console.log(`[${name}] ${message}`, args)
+        else
+            console.log(`[${name}] ${message}`)
+    }
+
+    return nwConsole
+}
+
+
+
 
 module.exports = {
     entityAtEntityCursor: entityAtEntityCursor,
     attackPlayer: attackPlayer,
-    attackEntity: attackEntity
+    attackEntity: attackEntity,
+    createConsole: createConsole,
+    isEntityIntrested: isEntityIntrested
 }

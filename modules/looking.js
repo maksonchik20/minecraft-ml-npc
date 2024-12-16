@@ -1,11 +1,13 @@
 const Vec3 = require('vec3').Vec3
-const { entityAtEntityCursor } = require('./functions.js')
+const { entityAtEntityCursor, isEntityIntrested } = require('./functions.js')
 
-async function add(bot) {
+async function add(console, bot) {
+
     bot.behaviors.looking = {}
 
     let currentCycle = 0
     let lookTimeout = null
+    let lookPoll = null;
     let lookToFar = 0
     const minCycles = 3
 
@@ -44,12 +46,10 @@ async function add(bot) {
         bot.behaviors.walking = true
     })
 
-    function distance(a, b) {
-        let dx = a.x - b.x
-        let dy = a.y - b.y
-        let dz = a.z - b.z
-        return Math.sqrt(dx * dx + dy * dy + dz * dz)
-    }
+    bot.on('end', () => {
+        clearInterval(lookTimeout);
+        clearInterval(lookPoll);
+    })
 
     async function look() {
         if(!bot.behaviors.looking.canLook())
@@ -57,7 +57,7 @@ async function add(bot) {
         if(bot.behaviors.looking.target == null)
             return
         bot.lookAt(bot.behaviors.looking.target.position.offset(0, bot.behaviors.looking.target.eyeHeight, 0))
-        if(distance(bot.behaviors.looking.target.position, bot.player.entity.position) > 7.5) {
+        if(bot.behaviors.looking.target.position.distanceTo(bot.player.entity.position) > 7.5) {
             if(lookToFar > 50)
                 bot.behaviors.looking.stopLooking()
             lookToFar++
@@ -113,14 +113,14 @@ async function add(bot) {
                     return
                 if(value.username === bot.username)
                     return
-                if(distance(bot.player.entity.position, value.position) < 5.0) {
-                    if(entityAtEntityCursor(bot, value) == bot.player.entity) {
+                if(bot.player.entity.position.distanceTo(value.position) < 5.0) {
+                    if(isEntityIntrested(bot, value)) {
                         console.log('He is looking at me!');
                         if(preffered == null) {
                             preffered = value;
                             chanceOfSelecting = 0.3
                             return;
-                        } else if (distance(bot.player.entity.position, preffered.position) > distance(bot.player.entity.position, value.position)){
+                        } else if (bot.player.entity.position.distanceTo(preffered.position) > bot.player.entity.position.distanceTo(value.position)){
                             parts.push(preffered);
                             preffered = value;
                             return;
@@ -141,7 +141,7 @@ async function add(bot) {
                     selected = parts[pos]
                 }
             } else {
-                if(Math.random() < 0.9 || parts.length == 0) {
+                if(Math.random() < prefferedChance || parts.length == 0) {
                     selected = preffered
                     chanceOfSelecting = 0.6
                 } else {
@@ -159,9 +159,8 @@ async function add(bot) {
             }
         }
     }
-
-    setInterval(lookingPolling, 500)
-
+    
+    lookPoll = setInterval(lookingPolling, 50000)
 }
 
 module.exports = add

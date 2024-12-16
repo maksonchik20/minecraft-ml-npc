@@ -2,3 +2,17 @@ venv
 logs
 .env
 node_modules
+server/cache
+server/config
+server/libraries
+server/logs
+server/plugins/*
+!server/plugins/SkinsRestorer
+server/plugins/SkinsRestorer/*
+!server/plugins/SkinsRestorer/skins
+!server/plugins/*.jar
+server/versions
+server/world*
+server/*.json
+server/*.yml
+server/.console_history

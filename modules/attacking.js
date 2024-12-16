@@ -1,7 +1,5 @@
-function add(bot) {
+function add(console, bot) {
     
-    
-
 }
 
 module.exports = add
