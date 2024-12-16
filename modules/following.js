@@ -28,6 +28,17 @@ function add(console, bot) {
         followPoll = null;
     }
 
+    bot.behaviors.follow.isFollowingEntity = (entity) => {
+        if(bot.behaviors.follow.target == null)
+            return false;
+        if(entity == null)
+            return false;
+        if(bot.behaviors.follow.target.username == entity.username)
+            return true;
+        if(bot.behaviors.follow.target == entity)
+            return true;
+    }
+
     bot.on('entityGone', (entity) => {
         if(bot.behaviors.follow.target == null)
             return;

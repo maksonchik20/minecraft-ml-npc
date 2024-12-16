@@ -1,9 +1,74 @@
 const Vec3 = require('vec3').Vec3
-const { entityAtEntityCursor, isEntityIntrested } = require('./functions.js')
+const { entityAtEntityCursor, isEntityLookingAtBot } = require('./functions.js')
+const conv = require('./../node_modules/mineflayer/lib/conversions.js')
+const { createDoneTask, createTask } = require('./../node_modules/mineflayer/lib/promise_utils.js')
 
 async function add(console, bot) {
 
     bot.behaviors.looking = {}
+    
+    bot.behaviors.looking.task = createDoneTask()
+
+    bot.on('move', () => {
+        if (!bot.behaviors.looking.task.done) {
+            bot.behaviors.looking.task.finish()
+        }
+    })
+
+    bot.look = async (yaw, pitch, force) => {
+        if (!bot.behaviors.looking.task.done) {
+            bot.behaviors.looking.task.finish() // finish the previous one
+        }
+        bot.behaviors.looking.task = createTask()
+
+        while(yaw > 180.0)
+           yaw -= 360.0;
+        while(yaw < -180.0)
+            yaw += 360.0;
+        pitch = Math.max(-90.0, Math.min(90.0, pitch));
+
+        if(!isFinite(yaw) || isNaN(yaw)) {
+            yaw = 0.0
+        }
+
+        if(!isFinite(pitch) || isNaN(pitch)) {
+            pitch = 0.0
+        }
+    
+        // this is done to bypass certain anticheat checks that detect the player's sensitivity
+        // by calculating the gcd of how much they move the mouse each tick
+        const sensitivity = conv.fromNotchianPitch(0.15) // this is equal to 100% sensitivity in vanilla
+        const yawChange = Math.round((yaw - bot.entity.yaw) / sensitivity) * sensitivity
+        const pitchChange = Math.round((pitch - bot.entity.pitch) / sensitivity) * sensitivity
+    
+        if (yawChange === 0 && pitchChange === 0) {
+            return
+        }
+    
+        bot.entity.yaw += yawChange
+        while(bot.entity.yaw > 180.0)
+            bot.entity.yaw -= 360.0;
+        while(bot.entity.yaw < -180.0)
+            bot.entity.yaw += 360.0;
+        bot.entity.pitch += pitchChange;
+        bot.entity.pitch = Math.max(-90.0, Math.min(90.0, bot.entity.pitch));
+
+        if(!isFinite(bot.entity.yaw) || isNaN(bot.entity.yaw)) {
+            bot.entity.yaw = 0.0
+        }
+
+        if(!isFinite(bot.entity.pitch) || isNaN(bot.entity.pitch)) {
+            bot.entity.pitch = 0.0
+        }
+    
+        if (force) {
+            bot.entity.yaw = yaw
+            bot.entity.pitch = pitch
+            return
+        }
+    
+        await bot.behaviors.looking.task.promise
+    }    
 
     let currentCycle = 0
     let lookTimeout = null
@@ -37,6 +102,88 @@ async function add(console, bot) {
         if(entity == bot.behaviors.looking.target)
             return true;
     }
+    
+    bot.behaviors.looking.lookAtEntity = (entity) => {
+        if(!bot.behaviors.looking.canLook())
+            return
+        if(entity == null)
+            return
+        if(!entity.eyeHeight)
+            entity.eyeHeight = entity.height * 0.88
+        bot.lookAt(entity.position.offset(0, entity.eyeHeight, 0))
+    }
+
+    bot.behaviors.looking.preferSelectingFuncs = []
+    
+    bot.behaviors.looking.preferSelectingFuncs.push(() => {
+        if(bot.behaviors.follow.isFollowing()) {
+            return {
+                preffered: bot.behaviors.follow.target,
+                prefferedChance: 0.9,
+                chanceOfPrefferedSelecting: 0.5
+            }
+        }
+        return {
+            preffered: null,
+            prefferedChance: 0.9,
+            chanceOfPrefferedSelecting: 0.5
+        }
+    })
+
+    bot.behaviors.looking.preferSelectingFuncs.push(() => {
+        let preffered = null;
+        let prefferedChance = 0.4;
+        let chanceOfPrefferedSelecting = 0.3;
+
+        let val = Object.values(bot.entities)
+        val.forEach((value) => {
+            if(value == undefined)
+                return
+            if(value.username === bot.username)
+                return
+            if(bot.player.entity.position.distanceTo(value.position) < 5.0) {
+                if(isEntityLookingAtBot(bot, value, 5.0)) {
+                    console.log('He is looking at me!');
+                    if(preffered == null) {
+                        preffered = value;
+                        prefferedChance = 0.4
+                        chanceOfPrefferedSelecting = 0.3
+                        return;
+                    } else if (bot.player.entity.position.distanceTo(preffered.position) > bot.player.entity.position.distanceTo(value.position)){
+                        preffered = value;
+                        return;
+                    }
+                }
+            }
+        })
+
+        return {
+            preffered: preffered,
+            prefferedChance: prefferedChance,
+            chanceOfPrefferedSelecting: chanceOfPrefferedSelecting
+        }
+    })
+
+    bot.behaviors.looking.preferSelect = () => {
+        let preffered = null;
+        let prefferedChance = 0.0;
+        let chanceOfPrefferedSelecting = 0.00;
+
+        bot.behaviors.looking.preferSelectingFuncs.forEach((func) => {
+            let {preffered: rPreffered, prefferedChance: rPrefferedChance, chanceOfPrefferedSelecting: rChanceOfPrefferedSelecting} = func()
+            if(prefferedChance * 0.65 + chanceOfPrefferedSelecting * 0.35 < rPrefferedChance * 0.65 + rChanceOfPrefferedSelecting * 0.35 && rPreffered != null) {
+                preffered = rPreffered;
+                prefferedChance = rPrefferedChance;
+                chanceOfPrefferedSelecting = rChanceOfPrefferedSelecting;
+            }
+        })
+
+        return {
+            preffered: preffered,
+            prefferedChance: prefferedChance,
+            chanceOfPrefferedSelecting: chanceOfPrefferedSelecting
+        }
+    }
 
     bot.on('goal_reached', () => {
         bot.behaviors.walking = false
@@ -56,7 +203,7 @@ async function add(console, bot) {
             return
         if(bot.behaviors.looking.target == null)
             return
-        bot.lookAt(bot.behaviors.looking.target.position.offset(0, bot.behaviors.looking.target.eyeHeight, 0))
+        bot.behaviors.looking.lookAtEntity(bot.behaviors.looking.target)
         if(bot.behaviors.looking.target.position.distanceTo(bot.player.entity.position) > 7.5) {
             if(lookToFar > 50)
                 bot.behaviors.looking.stopLooking()
@@ -102,38 +249,15 @@ async function add(console, bot) {
             
             let selected = null
             let chanceOfSelecting = 0.05
-            let prefferedChance = 0.9
+            
+            let {preffered, prefferedChance, chanceOfPrefferedSelecting} = bot.behaviors.looking.preferSelect()
 
-            let preffered = null
-
-            let parts = []
-            let val = Object.values(bot.entities)
-            val.forEach((value) => {
-                if(value == undefined)
-                    return
-                if(value.username === bot.username)
-                    return
-                if(bot.player.entity.position.distanceTo(value.position) < 5.0) {
-                    if(isEntityIntrested(bot, value)) {
-                        console.log('He is looking at me!');
-                        if(preffered == null) {
-                            preffered = value;
-                            chanceOfSelecting = 0.3
-                            return;
-                        } else if (bot.player.entity.position.distanceTo(preffered.position) > bot.player.entity.position.distanceTo(value.position)){
-                            parts.push(preffered);
-                            preffered = value;
-                            return;
-                        }
-                    }
-                    parts.push(value)
-                }
+            let parts = Object.values(bot.entities).filter((entity) => {
+                return entity != preffered && 
+                (preffered == null ? true : entity.username != preffered.username) && 
+                entity.username != bot.username &&
+                bot.player.entity.position.distanceTo(entity.position) <= 5.0
             })
-
-            if(bot.behaviors.follow.isFollowing()) {
-                preffered = bot.behaviors.follow.target;
-                prefferedChance = 0.9;
-            }
 
             if(preffered == null) {
                 if(parts.length != 0) {
@@ -143,24 +267,25 @@ async function add(console, bot) {
             } else {
                 if(Math.random() < prefferedChance || parts.length == 0) {
                     selected = preffered
-                    chanceOfSelecting = 0.6
                 } else {
                     pos = Math.floor(Math.random() * parts.length)
                     selected = parts[pos]
                 }
             }
 
-            if(Math.random() < chanceOfSelecting && selected != null) {
+            if((Math.random() < (selected == preffered ? chanceOfPrefferedSelecting : chanceOfSelecting)) && selected != null) {
                 console.log('Started looking at!')
                 currentCycle = 0
                 lookToFar = 0
                 bot.behaviors.looking.target = selected
                 lookTimeout = setInterval(look, 50)
+            } else {
+                console.log(`not intrested in selected! Change of interest was ${(selected == preffered ? chanceOfPrefferedSelecting : chanceOfSelecting)}`)
             }
         }
     }
     
-    lookPoll = setInterval(lookingPolling, 50000)
+    lookPoll = setInterval(lookingPolling, 500)
 }
 
 module.exports = add
