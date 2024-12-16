@@ -23,7 +23,7 @@ async function startLogs() {
 }
 
 async function createBot(config) {
-
+    
     bot = mineflayer.createBot(config.settings)
 
     bot.on('end', (res) => {

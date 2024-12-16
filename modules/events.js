@@ -1,4 +1,4 @@
-const {attackPlayer, attackEntity, reconnect} = require('./functions.js')
+const {attackPlayer, attackEntity} = require('./functions.js')
 const { Movements } = require('mineflayer-pathfinder');
 const { sayItems, equipItem, unequipItem, tossItem, craftItem} = require('./inventory.js')
 
@@ -10,18 +10,15 @@ function add(console, bot) {
 
     bot.on('chat', (username, message) => {
         if (username === bot.username) return
-        const command = message.split(' ')
         if (message.includes('come with me') && (message.includes(bot.username) || bot.behaviors.looking.isInterestedIn(bot.players[username].entity))) {
             console.log('start following ' + username)
             let target = bot.players[username]?.entity
             if(target !== undefined) {
-                bot.chat('Following you!')
                 bot.behaviors.follow.startFollowing(target)
             }
         }
         if (message.includes('stop following') && (message.includes(bot.username) || bot.behaviors.looking.isInterestedIn(bot.players[username].entity))) {
             console.log('stop following')
-            bot.chat('Ok');
             bot.behaviors.follow.stopFollowing()
         }
         if (message === 'attack me') {
@@ -50,10 +47,6 @@ function add(console, bot) {
         if (/^toss \w+$/.test(message)) {
             tossItem(bot, command[1])
         }
-    })
-
-    bot.on('disconnect', (reason) => {
-        reconnect(bot, bot.config.settings)
     })
 }
 
