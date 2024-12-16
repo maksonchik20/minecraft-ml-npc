@@ -3,5 +3,6 @@ module.exports = {
         host: 'localhost',
         port: 25565,
         username: 'bot'
-    }
+    },
+    additionalBehaviors: []
 }

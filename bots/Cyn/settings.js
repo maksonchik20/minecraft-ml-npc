@@ -3,5 +3,8 @@ module.exports = {
         host: 'localhost',
         port: 25565,
         username: 'Cyn'
-    }
+    },
+    additionalBehaviors: [
+        require('./hello')
+    ]
 }

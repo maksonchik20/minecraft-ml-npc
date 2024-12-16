@@ -25,6 +25,17 @@ async function add(bot) {
         clearInterval(lookTimeout);
     }
 
+    bot.behaviors.looking.isInterestedIn = (entity) => {
+        if(bot.behaviors.looking.target == null)
+            return false;
+        if(entity == null)
+            return false;
+        if(entity.username == bot.behaviors.looking.target.username)
+            return true;
+        if(entity == bot.behaviors.looking.target)
+            return true;
+    }
+
     bot.on('goal_reached', () => {
         bot.behaviors.walking = false
     })
