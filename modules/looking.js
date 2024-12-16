@@ -2,30 +2,26 @@ const Vec3 = require('vec3').Vec3
 const { entityAtEntityCursor } = require('./functions.js')
 
 async function add(bot) {
-    bot.behaviors = {}
-
-    bot.behaviors.basic = {}
-
-    require('./following.js')(bot)
+    bot.behaviors.looking = {}
 
     let currentCycle = 0
     let lookTimeout = null
     let lookToFar = 0
     const minCycles = 3
 
-    bot.behaviors.basic.target = null
+    bot.behaviors.looking.target = null
     bot.behaviors.walking = false
 
-    bot.behaviors.basic.isLookingFor = () => {
-        return bot.behaviors.basic.target != null
+    bot.behaviors.looking.isLookingFor = () => {
+        return bot.behaviors.looking.target != null
     }
 
-    bot.behaviors.basic.canLook = () => {
+    bot.behaviors.looking.canLook = () => {
         return !bot.behaviors.walking;
     }
 
-    bot.behaviors.basic.stopLooking = () => {
-        bot.behaviors.basic.target = null;
+    bot.behaviors.looking.stopLooking = () => {
+        bot.behaviors.looking.target = null;
         clearInterval(lookTimeout);
     }
 
@@ -45,14 +41,14 @@ async function add(bot) {
     }
 
     async function look() {
-        if(!bot.behaviors.basic.canLook())
+        if(!bot.behaviors.looking.canLook())
             return
-        if(bot.behaviors.basic.target == null)
+        if(bot.behaviors.looking.target == null)
             return
-        bot.lookAt(bot.behaviors.basic.target.position.offset(0, bot.behaviors.basic.target.eyeHeight, 0))
-        if(distance(bot.behaviors.basic.target.position, bot.player.entity.position) > 7.5) {
+        bot.lookAt(bot.behaviors.looking.target.position.offset(0, bot.behaviors.looking.target.eyeHeight, 0))
+        if(distance(bot.behaviors.looking.target.position, bot.player.entity.position) > 7.5) {
             if(lookToFar > 50)
-                bot.behaviors.basic.stopLooking()
+                bot.behaviors.looking.stopLooking()
             lookToFar++
         } else {
             lookToFar = 0;
@@ -60,15 +56,15 @@ async function add(bot) {
     }
 
     async function lookingPolling() {
-        if(bot.behaviors.basic.isLookingFor()) {
+        if(bot.behaviors.looking.isLookingFor()) {
             console.log('Checking interest point')
             let prefferedChance = 0.0;
 
-            if(entityAtEntityCursor(bot, bot.behaviors.basic.target) == bot.player.entity) {
+            if(entityAtEntityCursor(bot, bot.behaviors.looking.target) == bot.player.entity) {
                 prefferedChance = 0.1;
             }
 
-            if(bot.behaviors.follow.target == bot.behaviors.basic.target) {
+            if(bot.behaviors.follow.target == bot.behaviors.looking.target) {
                 prefferedChance = 0.5;
             }
 
@@ -80,14 +76,14 @@ async function add(bot) {
             if(currentCycle >= minCycles) {
                 let chanceOfDeselecting = Math.pow(1.7, currentCycle - minCycles) / 100.0
                 if(Math.random() < chanceOfDeselecting) {
-                    bot.behaviors.basic.target = null;
+                    bot.behaviors.looking.target = null;
                     clearInterval(lookTimeout);
                 }
             }
             currentCycle++
         } else {
 
-            if(bot.behaviors.basic.canLook()) {
+            if(bot.behaviors.looking.canLook()) {
                 bot.look(bot.player.entity.yaw, 0.0);
             }
 
@@ -147,7 +143,7 @@ async function add(bot) {
                 console.log('Started looking at!')
                 currentCycle = 0
                 lookToFar = 0
-                bot.behaviors.basic.target = selected
+                bot.behaviors.looking.target = selected
                 lookTimeout = setInterval(look, 50)
             }
         }

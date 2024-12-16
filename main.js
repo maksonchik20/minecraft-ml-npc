@@ -1,13 +1,13 @@
 const mineflayer = require('mineflayer');
 const { pathfinder, Movements, goals: { GoalNear } } = require('mineflayer-pathfinder');
-const behaviors = require('./modules/basic.js')
+const behaviors = require('./modules/loadBehaviors.js')
 const {attackPlayer, attackEntity} = require('./modules/functions.js')
 const { sayItems, equipItem, unequipItem, tossItem} = require('./modules/inventory')
 const fs = require('fs/promises');
 
 let bot = undefined;
 
-async function startBot() {
+async function createBot() {
     let date = new Date();
     let logFileName = `logs/log_${date.getFullYear()}_${date.getMonth() + 1}_${date.getDate()} ${date.getHours()}_${date.getMinutes()}_${date.getSeconds()}.txt`;
 
@@ -33,51 +33,53 @@ async function startBot() {
     bot.loadPlugin(behaviors);
 
 
-
-    bot.once('spawn', async () => {
+    bot.on('spawn', async () => {
         let defaultMove = new Movements(bot)
         bot.pathfinder.setMovements(defaultMove)
-        bot.on('chat', (username, message) => {
-            if (username === bot.username) return
-            const command = message.split(' ')
-            if (message === 'come with me') {
-                console.log('start following ' + username)
-                let target = bot.players[username]?.entity
-                if(target !== undefined)
-                    bot.behaviors.follow.startFollowing(target)
-            }
-            if (message === 'stop following') {
-                console.log('stop following')
-                bot.behaviors.follow.stopFollowing()
-            }
-            if (message === 'attack me') {
-                attackPlayer(bot, username)
-                console.log('attacking me')
-            }
-            else if (message === 'attack') {
-                attackEntity(bot);
-                console.log('attack someone')
-            }
-            if (message === 'say items') {
-                sayItems(bot)
-            }
-            if (/^equip [\w-]+ \w+$/.test(message)) {
-                // example: equip hand diamond
-                equipItem(bot, command[2], command[1])
-            }
-            if (/^unequip \w+$/.test(message)) {
-                // example: unequip hand
-                unequipItem(bot, command[1])
-            }
-            if (/^toss \d+ \w+$/.test(message)) {
-                // example: toss 52 diamond
-                tossItem(bot, command[2], command[1])
-            }
-            if (/^toss \w+$/.test(message)) {
-                tossItem(bot, command[1])
-            }
-        })
     })
+
+    bot.on('chat', (username, message) => {
+        if (username === bot.username) return
+        const command = message.split(' ')
+        if (message === 'come with me') {
+            console.log('start following ' + username)
+            let target = bot.players[username]?.entity
+            if(target !== undefined)
+                bot.behaviors.follow.startFollowing(target)
+        }
+        if (message === 'stop following') {
+            console.log('stop following')
+            bot.behaviors.follow.stopFollowing()
+        }
+        if (message === 'attack me') {
+            attackPlayer(bot, username)
+            console.log('attacking me')
+        }
+        else if (message === 'attack') {
+            attackEntity(bot);
+            console.log('attack someone')
+        }
+        if (message === 'say items') {
+            sayItems(bot)
+        }
+        if (/^equip [\w-]+ \w+$/.test(message)) {
+            // example: equip hand diamond
+            equipItem(bot, command[2], command[1])
+        }
+        if (/^unequip \w+$/.test(message)) {
+            // example: unequip hand
+            unequipItem(bot, command[1])
+        }
+        if (/^toss \d+ \w+$/.test(message)) {
+            // example: toss 52 diamond
+            tossItem(bot, command[2], command[1])
+        }
+        if (/^toss \w+$/.test(message)) {
+            tossItem(bot, command[1])
+        }
+    })
+
+    bot.on('')
 }
 
 
