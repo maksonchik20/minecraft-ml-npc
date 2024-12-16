@@ -85,4 +85,4 @@ async function createBot() {
 
 
 
-startBot();
+createBot();
