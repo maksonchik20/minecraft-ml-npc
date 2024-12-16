@@ -5,6 +5,7 @@ module.exports = {
         username: 'sigma'
     },
     additionalBehaviors: [
-        require('./guardBehavior')
+        {name: 'guard', behavior: require('./guardBehavior')},
+        {name: 'sleep', behavior: require('./sleepBehavior')}
     ]
 }
