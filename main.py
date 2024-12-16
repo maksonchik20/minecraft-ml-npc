@@ -1,18 +1,25 @@
 from javascript import require, On, Once
-from datetime import datetime
+from dotenv import load_dotenv
+import sys, os, datetime, time
 
 mineflayer = require('mineflayer')
 pathfinder = require('mineflayer-pathfinder')
 mineflayerViewer = require('prismarine-viewer')
 
+print('Starting logs')
+now_time = datetime.datetime.now().strftime('%Y_%m_%d %H_%M_%S')
+logFile = open(file=f'logs/log_{now_time}.txt', mode='w', encoding='utf-8')
+sys.stdout = logFile
+sys.stderr = logFile
 
+load_dotenv()
 
-RANGE_GOAL = 2
-BOT_USERNAME = 'sigma'
+RANGE_GOAL = 1
+BOT_USERNAME = os.getenv('botUsername', 'PythonBot')
 
 bot = mineflayer.createBot({
-  'host': '10.82.95.41',
-  'port': 25565,
+  'host': os.getenv('host', 'localhost'),
+  'port': os.getenv('port', 25565),
   'username': BOT_USERNAME
 })
 
@@ -20,12 +27,7 @@ bot.loadPlugin(pathfinder.pathfinder)
 bot.loadPlugin(mineflayerViewer.mineflayer)
 print("Started mineflayer")
 
-
-# @Once(bot, 'spawn')
-# def viewer(*args):
-#    mineflayerViewer(bot, {"port": 25565, "firstPerson": True})
-
-@On(bot, 'spawn')
+@Once(bot, 'spawn')
 def handle(*args):
   print("I spawned 👋")
   # print("viewer: ", mineflayerViewer.headless)
@@ -35,28 +37,28 @@ def handle(*args):
   # mineflayerViewer.mineflayer({"port": 25565})
   # bot.mineflayerViewer({"port": 25565, "firstPerson": True})
 
-# @On(bot, 'chat')
-# def handleMsg(this, sender, message, *args):
-#   movements = pathfinder.Movements(bot)
-#   print("Got message", sender, message)
-#   if sender and (sender != BOT_USERNAME):
-#     bot.chat('Hi, you said ' + message)
-#     if 'bye' in message:
-#       bot.quit(f"{sender} told me to")
-#       bot.chat("GoodBye!")
-#     if message.startswith('time'):
-#        bot.chat(f"Current time: " + str(datetime.today()))
-#     if 'come' in message:
-#       player = bot.players[sender]
-#       print("Target", player)
-#       print(player)
-#       target = player.entity
-#       if not target:
-#         bot.chat("I don't see you !")
-#         return
-#       pos = target.position
-#       bot.pathfinder.setMovements(movements)
-#       bot.pathfinder.setGoal(pathfinder.goals.GoalNear(pos.x, pos.y, pos.z, RANGE_GOAL))
+@On(bot, 'chat')
+def handleMsg(this, sender, message, *args):
+  movements = pathfinder.Movements(bot)
+  print("Got message", sender, message)
+  if sender and (sender != BOT_USERNAME):
+    bot.chat('Hi, you said ' + message)
+    if 'bye' in message:
+      bot.quit(f"{sender} told me to")
+      bot.chat("GoodBye!")
+    if message.startswith('time'):
+       bot.chat(f"Current time: " + str(datetime.today()))
+    if 'come' in message:
+      player = bot.players[sender]
+      print("Target", player)
+      print(player)
+      target = player.entity
+      if not target:
+        bot.chat("I don't see you !")
+        return
+      pos = target.position
+      bot.pathfinder.setMovements(movements)
+      bot.pathfinder.setGoal(pathfinder.goals.GoalNear(pos.x, pos.y, pos.z, RANGE_GOAL))
 
 # @On(bot, "end")
 # def handle(*args):
