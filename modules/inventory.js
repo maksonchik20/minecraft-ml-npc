@@ -1,6 +1,5 @@
 function sayItems (bot, items = null) {
     if (!items) {
-        console.log(bot.inventory.items())
         items = bot.inventory.items()
         if (bot.registry.isNewerOrEqualTo('1.9') && bot.inventory.slots[45]) items.push(bot.inventory.slots[45])
     }
@@ -22,7 +21,7 @@ async function unequipItem (bot, destination) {
 }
 
 async function equipItem (bot, name, destination) {
-    const item = itemByName(name)
+    const item = itemByName(bot, name)
     if (item) {
         try {
             await bot.equip(item, destination)
@@ -35,6 +34,26 @@ async function equipItem (bot, name, destination) {
     }
 }
 
+async function tossItem (bot, name, amount) {
+    amount = parseInt(amount, 10)
+    const item = itemByName(bot, name)
+    if (!item) {
+        bot.chat(`I have no ${name}`)
+    } else {
+        try {
+            if (amount) {
+                await bot.toss(item.type, null, amount)
+                bot.chat(`Tossed ${amount} x ${name}`)
+            } else {
+                await bot.tossStack(item)
+                bot.chat(`Tossed ${name}`)
+            }
+        } catch (err) {
+          bot.chat(`Unable to toss: ${err.message}`)
+        }
+    }
+}
+
 function itemToString (item) {
     if (item) {
         return `${item.name} x ${item.count}`
@@ -44,14 +63,7 @@ function itemToString (item) {
 }
 
 function itemByName (bot, name) {
-    console.log(bot.inventory)
     const items = bot.inventory.items()
-    if (!items) {
-        console.log('WTF WHYYY')
-    }
-    else {
-        console.log('BRUH')
-    }
     if (bot.registry.isNewerOrEqualTo('1.9') && bot.inventory.slots[45]) items.push(bot.inventory.slots[45])
     return items.filter(item => item.name === name)[0]
 }
@@ -59,5 +71,6 @@ function itemByName (bot, name) {
 module.exports = {
     sayItems: sayItems,
     equipItem: equipItem,
-    unequipItem: unequipItem
+    unequipItem: unequipItem,
+    tossItem: tossItem
 }

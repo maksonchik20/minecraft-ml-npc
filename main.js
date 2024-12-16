@@ -2,7 +2,7 @@ const mineflayer = require('mineflayer');
 const { pathfinder, Movements, goals: { GoalNear } } = require('mineflayer-pathfinder');
 const behaviors = require('./modules/basic.js')
 const {attackPlayer, attackEntity} = require('./modules/functions.js')
-const { sayItems, equipItem} = require('./modules/inventory')
+const { sayItems, equipItem, unequipItem, tossItem} = require('./modules/inventory')
 const fs = require('fs/promises');
 
 let bot = undefined;
@@ -60,11 +60,21 @@ async function startBot() {
             }
             if (message === 'say items') {
                 sayItems(bot)
-                console.log('saying items')
             }
             if (/^equip [\w-]+ \w+$/.test(message)) {
-                console.log(command[2], command[1])
+                // example: equip hand diamond
                 equipItem(bot, command[2], command[1])
+            }
+            if (/^unequip \w+$/.test(message)) {
+                // example: unequip hand
+                unequipItem(bot, command[1])
+            }
+            if (/^toss \d+ \w+$/.test(message)) {
+                // example: toss 52 diamond
+                tossItem(bot, command[2], command[1])
+            }
+            if (/^toss \w+$/.test(message)) {
+                tossItem(bot, command[1])
             }
         })
     })
