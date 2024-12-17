@@ -26,9 +26,11 @@ async function createBot(config) {
     
     bot = mineflayer.createBot(config.settings)
 
+    bot.config = config;
+
     bot.on('end', (res) => {
         console.error('bot ended because of ' + res)
-        
+
         if(res == 'socketClosed')
             console.error('last sent packet ' + JSON.stringify(bot.endReason))
 
