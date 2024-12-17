@@ -6,16 +6,15 @@ async function goToSleep (bot) {
     if (bed) {
         console.log(JSON.stringify(bed))
         try {
-            bot
-            bot.sleep(bed)
-            bot.chat("I'm sleeping")
+          bot.sleep(bed)
+          bot.chat("I'm sleeping")
         } catch (err) {
             console.log(err)
             bot.chat(`I can't sleep: ${err.message}`)
         }
-        } else {
-            bot.chat('No nearby bed')
-        }
+    } else {
+        bot.chat('No nearby bed')
+    }
 }
   async function wakeUp (bot) {
     try {
