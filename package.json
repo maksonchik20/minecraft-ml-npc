@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/maksonchik20/minecraft-ml-npc#readme",
   "dependencies": {
+    "ajv": "^8.17.1",
     "debug": "^4.4.0",
     "dotenv": "^16.4.7",
     "mineflayer": "^4.23.0",

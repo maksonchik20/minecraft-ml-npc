@@ -28,11 +28,29 @@ async function createBot(config) {
 
     bot.config = config;
 
+    process.on('exit', async () => {
+        bot.end('botClosed')
+    })
+
+    process.on('SIGINT', async () => {
+        bot.end('botClosed')
+    });
+
+    process.on('SIGUSR1', async () => {
+        bot.end('botClosed')
+    });
+    process.on('SIGUSR2', async () => {
+        bot.end('botClosed')
+    });
+
     bot.on('end', (res) => {
         console.error('bot ended because of ' + res)
 
         if(res == 'socketClosed')
             console.error('last sent packet ' + JSON.stringify(bot.endReason))
+
+        if(res == 'botClosed')
+            return
 
         createBot(config)
     })
@@ -52,7 +70,7 @@ async function createBot(config) {
 
 async function main() {
 
-    console = createConsole(global.console, 'Magus2')
+    console = createConsole(global.console, 'Bot')
 
     await startLogs();
 

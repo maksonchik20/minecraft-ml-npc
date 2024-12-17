@@ -1,0 +1,112 @@
+{
+    "messages": [
+        {
+            "role": "user",
+            "text": "[{\"type\":\"event\",\"event_type\":\"bot_joined\"}]"
+        },
+        {
+            "role": "assistant",
+            "text": "[]"
+        },
+        {
+            "role": "user",
+            "text": "[{\"type\":\"event\",\"event_type\":\"chat\",\"player_name\":\"Other_Gamer\",\"message\":\"Привет!\"}]"
+        },
+        {
+            "role": "assistant",
+            "text": "[{\"type\":\"command\",\"command_type\":\"chat\",\"message\":\"Привет, Other_Gamer!\"}]"
+        },
+        {
+            "role": "user",
+            "text": "[{\"type\":\"event\",\"event_type\":\"command_complete_ok\",\"command_type\":\"chat\"}]"
+        },
+        {
+            "role": "assistant",
+            "text": "[]"
+        },
+        {
+            "role": "user",
+            "text": "[{\"type\":\"event\",\"event_type\":\"chat\",\"player_name\":\"Other_Gamer\",\"message\":\"Чё как там?\"}]"
+        },
+        {
+            "role": "assistant",
+            "text": "[{\"type\":\"command\",\"command_type\":\"chat\",\"message\":\"Всё хорошо, Other_Gamer! Как у тебя дела?\"}]"
+        },
+        {
+            "role": "user",
+            "text": "[{\"type\":\"event\",\"event_type\":\"command_complete_ok\",\"command_type\":\"chat\"}]"
+        },
+        {
+            "role": "assistant",
+            "text": "[]"
+        },
+        {
+            "role": "user",
+            "text": "[{\"type\":\"event\",\"event_type\":\"chat\",\"player_name\":\"Other_Gamer\",\"message\":\"Норм\"}]"
+        },
+        {
+            "role": "assistant",
+            "text": "[{\"type\":\"command\",\"command_type\":\"chat\",\"message\":\"Рад слышать, Other_Gamer!\"}]"
+        },
+        {
+            "role": "user",
+            "text": "[{\"type\":\"event\",\"event_type\":\"command_complete_ok\",\"command_type\":\"chat\"}]"
+        },
+        {
+            "role": "assistant",
+            "text": "[]"
+        },
+        {
+            "role": "user",
+            "text": "[{\"type\":\"event\",\"event_type\":\"chat\",\"player_name\":\"Other_Gamer\",\"message\":\"Реши уравнение 2x + 1 = 5\"}]"
+        },
+        {
+            "role": "assistant",
+            "text": "[{\"type\":\"command\",\"command_type\":\"chat\",\"message\":\"x = 2\"}]"
+        },
+        {
+            "role": "user",
+            "text": "[{\"type\":\"event\",\"event_type\":\"command_complete_ok\",\"command_type\":\"chat\"}]"
+        },
+        {
+            "role": "assistant",
+            "text": "[]"
+        },
+        {
+            "role": "user",
+            "text": "[{\"type\":\"event\",\"event_type\":\"chat\",\"player_name\":\"Other_Gamer\",\"message\":\"Напиши код odd-even\"}]"
+        },
+        {
+            "role": "user",
+            "text": "[{\"type\":\"event\",\"event_type\":\"bot_joined\"}]"
+        },
+        {
+            "role": "user",
+            "text": "[{\"type\":\"event\",\"event_type\":\"chat\",\"player_name\":\"Other_Gamer\",\"message\":\"О чём мы говорили в прошлый раз?\"}]"
+        },
+        {
+            "role": "assistant",
+            "text": "[{\"type\":\"command\",\"command_type\":\"chat\",\"message\":\"Мы обсуждали, как разделить числа на чётные и нечётные с помощью условного оператора. Я предложил пример кода для этой задачи.\"}]"
+        },
+        {
+            "role": "user",
+            "text": "[{\"type\":\"event\",\"event_type\":\"command_complete_ok\",\"command_type\":\"chat\"}]"
+        },
+        {
+            "role": "assistant",
+            "text": "[]"
+        },
+        {
+            "role": "user",
+            "text": "[{\"type\":\"event\",\"event_type\":\"chat\",\"player_name\":\"Other_Gamer\",\"message\":\"Запомни число x=5\"}]"
+        },
+        {
+            "role": "assistant",
+            "text": "[{\"type\":\"command\",\"command_type\":\"chat\",\"message\":\"Хорошо, я запомнил: x=5.\"}]"
+        },
+        {
+            "role": "user",
+            "text": "[{\"type\":\"event\",\"event_type\":\"command_complete_ok\",\"command_type\":\"chat\"}]"
+        }
+    ]
+}
