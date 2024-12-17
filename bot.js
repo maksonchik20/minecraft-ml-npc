@@ -28,6 +28,9 @@ async function createBot(config) {
 
     bot.on('end', (res) => {
         console.error('bot ended because of ' + res)
+        
+        if(res == 'socketClosed')
+            console.error('last sent packet ' + JSON.stringify(bot.endReason))
 
         createBot(config)
     })
@@ -47,7 +50,7 @@ async function createBot(config) {
 
 async function main() {
 
-    console = createConsole(global.console, 'Bot')
+    console = createConsole(global.console, 'Magus2')
 
     await startLogs();
 

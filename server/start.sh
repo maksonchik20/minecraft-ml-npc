@@ -1,0 +1,1 @@
+./jdk-21.0.5+11-jre/bin/java -Xmx2G -Xms2G -jar server1.20.1.jar nogui

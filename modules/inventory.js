@@ -1,6 +1,7 @@
 function sayItems (bot, items = null) {
     if (!items) {
         items = bot.inventory.items()
+        console.log(items)
         if (bot.registry.isNewerOrEqualTo('1.9') && bot.inventory.slots[45]) items.push(bot.inventory.slots[45])
     }
     const output = items.map(itemToString).join(', ')
@@ -12,6 +13,7 @@ function sayItems (bot, items = null) {
 }
 
 async function unequipItem (bot, destination) {
+    console.log(destination)
     try {
         await bot.unequip(destination)
         bot.chat(`Unequipped ${destination}`)
@@ -21,6 +23,7 @@ async function unequipItem (bot, destination) {
 }
 
 async function equipItem (bot, name, destination) {
+    console.log(name, destination)
     const item = itemByName(bot, name)
     if (item) {
         try {
@@ -54,34 +57,6 @@ async function tossItem (bot, name, amount) {
     }
 }
 
-async function craftItem(bot, name, amount) {
-  amount = parseInt(amount, 10)
-  bot.chat(amount)
-  const item = bot.registry.itemsByName[name]
-  const craftingTableID = bot.registry.blocksByName.crafting_table.id
-
-  const craftingTable = bot.findBlock({
-    matching: craftingTableID
-  })
-
-  if (item) {
-    const recipe = bot.recipesFor(item.id, null, 1, craftingTable)[0]
-    if (recipe) {
-      bot.chat(`I can make ${name}`)
-      try {
-        await bot.craft(recipe, amount, craftingTable)
-        bot.chat(`Did the recipe for ${name} ${amount} times`)
-      } catch (err) {
-        bot.chat(`Error making ${name}`)
-      }
-    } else {
-      bot.chat(`I cannot make ${name}`)
-    }
-  } else {
-    bot.chat(`Unknown item: ${name}`)
-  }
-}
-
 
 function itemToString (item) {
     if (item) {
@@ -101,6 +76,5 @@ module.exports = {
     sayItems: sayItems,
     equipItem: equipItem,
     unequipItem: unequipItem,
-    tossItem: tossItem,
-    craftItem: craftItem
+    tossItem: tossItem
 }

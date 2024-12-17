@@ -1,6 +1,6 @@
 const {attackPlayer, attackEntity} = require('./functions.js')
 const { Movements } = require('mineflayer-pathfinder');
-const { sayItems, equipItem, unequipItem, tossItem, craftItem} = require('./inventory.js')
+const { sayItems, equipItem, unequipItem, tossItem} = require('./inventory.js')
 
 function add(console, bot) {
     bot.on('spawn', async () => {
@@ -35,6 +35,7 @@ function add(console, bot) {
         }
         if (/^equip [\w-]+ \w+$/.test(message)) {
             // example: equip hand diamond
+            console.log(command)
             equipItem(bot, command[2], command[1])
         }
         if (/^unequip \w+$/.test(message)) {

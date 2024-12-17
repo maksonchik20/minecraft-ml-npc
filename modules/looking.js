@@ -1,80 +1,18 @@
 const Vec3 = require('vec3').Vec3
 const { entityAtEntityCursor, isEntityLookingAtBot } = require('./functions.js')
-const conv = require('./../node_modules/mineflayer/lib/conversions.js')
-const { createDoneTask, createTask } = require('./../node_modules/mineflayer/lib/promise_utils.js')
 
 async function add(console, bot) {
 
     bot.behaviors.looking = {}
     
-    bot.behaviors.looking.task = createDoneTask()
-
-    bot.on('move', () => {
-        if (!bot.behaviors.looking.task.done) {
-            bot.behaviors.looking.task.finish()
-        }
-    })
-
-    bot.look = async (yaw, pitch, force) => {
-        if (!bot.behaviors.looking.task.done) {
-            bot.behaviors.looking.task.finish() // finish the previous one
-        }
-        bot.behaviors.looking.task = createTask()
-
-        while(yaw > 180.0)
-           yaw -= 360.0;
-        while(yaw < -180.0)
-            yaw += 360.0;
-        pitch = Math.max(-90.0, Math.min(90.0, pitch));
-
-        if(!isFinite(yaw) || isNaN(yaw)) {
-            yaw = 0.0
-        }
-
-        if(!isFinite(pitch) || isNaN(pitch)) {
-            pitch = 0.0
-        }
-    
-        // this is done to bypass certain anticheat checks that detect the player's sensitivity
-        // by calculating the gcd of how much they move the mouse each tick
-        const sensitivity = conv.fromNotchianPitch(0.15) // this is equal to 100% sensitivity in vanilla
-        const yawChange = Math.round((yaw - bot.entity.yaw) / sensitivity) * sensitivity
-        const pitchChange = Math.round((pitch - bot.entity.pitch) / sensitivity) * sensitivity
-    
-        if (yawChange === 0 && pitchChange === 0) {
-            return
-        }
-    
-        bot.entity.yaw += yawChange
-        while(bot.entity.yaw > 180.0)
-            bot.entity.yaw -= 360.0;
-        while(bot.entity.yaw < -180.0)
-            bot.entity.yaw += 360.0;
-        bot.entity.pitch += pitchChange;
-        bot.entity.pitch = Math.max(-90.0, Math.min(90.0, bot.entity.pitch));
-
-        if(!isFinite(bot.entity.yaw) || isNaN(bot.entity.yaw)) {
-            bot.entity.yaw = 0.0
-        }
-
-        if(!isFinite(bot.entity.pitch) || isNaN(bot.entity.pitch)) {
-            bot.entity.pitch = 0.0
-        }
-    
-        if (force) {
-            bot.entity.yaw = yaw
-            bot.entity.pitch = pitch
-            return
-        }
-    
-        await bot.behaviors.looking.task.promise
-    }    
 
     let currentCycle = 0
     let lookTimeout = null
     let lookPoll = null;
     let lookToFar = 0
-    const minCycles = 3
+
+    bot.behaviors.looking.setting = {}
+    bot.behaviors.looking.setting.minCycles = 3;
 
     bot.behaviors.looking.target = null
     bot.behaviors.walking = false
@@ -170,8 +108,15 @@ async function add(console, bot) {
         let chanceOfPrefferedSelecting = 0.00;
 
         bot.behaviors.looking.preferSelectingFuncs.forEach((func) => {
-            let {preffered: rPreffered, prefferedChance: rPrefferedChance, chanceOfPrefferedSelecting: rChanceOfPrefferedSelecting} = func()
-            if(prefferedChance * 0.65 + chanceOfPrefferedSelecting * 0.35 < rPrefferedChance * 0.65 + rChanceOfPrefferedSelecting * 0.35 && rPreffered != null) {
+            let {
+                preffered: rPreffered,
+                prefferedChance: rPrefferedChance,
+                chanceOfPrefferedSelecting: rChanceOfPrefferedSelecting
+            } = func()
+            if(prefferedChance * 0.65 + chanceOfPrefferedSelecting * 0.35 <
+                rPrefferedChance * 0.65 + rChanceOfPrefferedSelecting * 0.35 && 
+                rPreffered != null
+            ) {
                 preffered = rPreffered;
                 prefferedChance = rPrefferedChance;
                 chanceOfPrefferedSelecting = rChanceOfPrefferedSelecting;
@@ -231,8 +176,8 @@ async function add(console, bot) {
                 console.log('Reintrested in point!');
             }
 
-            if(currentCycle >= minCycles) {
-                let chanceOfDeselecting = Math.pow(1.7, currentCycle - minCycles) / 100.0
+            if(currentCycle >= bot.behaviors.looking.setting.minCycles) {
+                let chanceOfDeselecting = Math.pow(1.7, currentCycle - bot.behaviors.looking.setting.minCycles) / 100.0
                 if(Math.random() < chanceOfDeselecting) {
                     bot.behaviors.looking.target = null;
                     clearInterval(lookTimeout);
