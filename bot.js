@@ -28,8 +28,9 @@ async function createBot(config) {
 
     bot.on('end', (res) => {
         console.error('bot ended because of ' + res)
-
-        console.error('last sent packet ' + JSON.stringify(bot.endReason))
+        
+        if(res == 'socketClosed')
+            console.error('last sent packet ' + JSON.stringify(bot.endReason))
 
         createBot(config)
     })
