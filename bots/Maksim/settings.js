@@ -1,6 +1,6 @@
 module.exports = {
     settings: {
-        host: '10.82.95.41',
+        host: '10.82.50.66',
         port: 25565,
         username: 'sigma'
     },

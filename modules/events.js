@@ -10,6 +10,7 @@ function add(console, bot) {
 
     bot.on('chat', (username, message) => {
         if (username === bot.username) return
+        command = message.split(' ')
         if (message.includes('come with me') && (message.includes(bot.username) || bot.behaviors.looking.isInterestedIn(bot.players[username].entity))) {
             console.log('start following ' + username)
             let target = bot.players[username]?.entity
