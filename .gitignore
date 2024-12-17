@@ -1,7 +1,14 @@
 venv
 logs
 .env
-node_modules
+node_modules/*
+!node_modules/mineflayer
+node_modules/mineflayer/*
+!node_modules/mineflayer/lib
+node_modules/mineflayer/lib/*
+!node_modules/mineflayer/lib/plugins
+node_modules/mineflayer/lib/plugins/*
+!node_modules/mineflayer/lib/plugins/physics.js
 server/cache
 server/config
 server/libraries
@@ -12,6 +19,7 @@ server/plugins/SkinsRestorer/*
 !server/plugins/SkinsRestorer/skins
 server/plugins/SkinsRestorer/skins/*.playerskin
 server/plugins/SkinsRestorer/skins/*.urlskin
+server/plugins/SkinsRestorer/skins/*.urlindex
 !server/plugins/*.jar
 server/versions
 server/world*
