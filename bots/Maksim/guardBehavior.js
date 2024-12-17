@@ -9,6 +9,7 @@ function add(console, bot) {
     bot.loadPlugin(pvp)
 
     bot.on('stoppedAttacking', () => {
+        console.log(`stoppedAttacking ${bot.guardPos}`)
         if (bot.guardPos) {
             moveToGuardPos(bot)
         }
@@ -16,7 +17,21 @@ function add(console, bot) {
 
     bot.on('physicsTick', () => {
         if (!bot.guardPos) return
-        const filter = (entity) => {return entity.username != bot.username && entity.type == 'hostile' && entity.position.distanceTo(bot.entity.position) < 16 && entity.displayName !== 'Armor Stand'}
+        let filter
+        if (bot.protect_player) {
+            filter = (entity) => {
+                return entity.type == 'hostile' &&
+                entity.position.distanceTo(bot.players['maksonchik20'].entity.position) < 16 &&
+                entity.displayName !== 'Armor Stand'
+            }
+        } else {
+            // todo: искать близжайшего к bot.protect_player (хранить тут player).
+            filter = (entity) => {
+                return entity.type == 'hostile' &&
+                entity.position.distanceTo(bot.players['maksonchik20'].entity.position) < 16 &&
+                entity.displayName !== 'Armor Stand'
+            }
+        }
         const entity = bot.nearestEntity(filter)
         
         if (entity) {
@@ -34,9 +49,13 @@ function add(console, bot) {
                 bot.chat("I can't see you.")
                 return
             }
-
-            bot.chat('I will guard that location.')
-            guardArea(bot, player.entity.position)
+            if (bot.behaviors.follow.target != null) {
+                bot.chat('I will protect you.')
+                guardArea(bot, player.entity.position, true)
+            } else {
+                bot.chat('I will guard that location.')
+                guardArea(bot, player.entity.position, false)
+            }
         }
 
         if (message === 'stop') {
