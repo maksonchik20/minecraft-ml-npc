@@ -47,7 +47,7 @@ async function createBot(config) {
 
 async function main() {
 
-    console = createConsole(global.console, 'Bot')
+    console = createConsole(global.console, 'Magus2')
 
     await startLogs();
 
