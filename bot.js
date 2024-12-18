@@ -6,13 +6,14 @@ const { createConsole } = require('./modules/functions.js');
 
 let bot = undefined;
 let console = undefined;
+let logs = undefined;
 
 async function startLogs() {
     let date = new Date();
     let logFileName = `logs/log_${date.getFullYear()}_${date.getMonth() + 1}_${date.getDate()} ${date.getHours()}_${date.getMinutes()}_${date.getSeconds()}.txt`;
 
-    let logs = await (await fs.open(logFileName, 'w')).createWriteStream();
-
+    logs = await (await fs.open(logFileName, 'w')).createWriteStream();
+    
     console.log('Starting logs')
 
     process.stdout.write = process.stderr.write = logs.write.bind(logs)
@@ -20,6 +21,7 @@ async function startLogs() {
     process.on('uncaughtException', function(err) {
         console.error((err && err.stack) ? err.stack : err);
     });
+
 }
 
 async function createBot(config) {
@@ -50,7 +52,7 @@ async function createBot(config) {
             console.error('last sent packet ' + JSON.stringify(bot.endReason))
 
         if(res == 'botClosed')
-            return
+            return;
 
         createBot(config)
     })

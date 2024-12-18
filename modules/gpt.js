@@ -7,13 +7,14 @@ function add(console, bot) {
     
     bot.behaviors.gpt = {}
 
-    bot.behaviors.gpt.ask = async (messages) => {
+    bot.behaviors.gpt.ask = async (messages, tools=[], maxTokens=1000) => {
         let data = {}
         data['modelUri'] = 'gpt://b1glpqm6du4km50rq59p/yandexgpt/latest'
         data['completionOptions'] = {'stream': false,
-            'temperature': 0.3,
-            'maxTokens': 1000}
+            'temperature': 0.25,
+            'maxTokens': maxTokens}
         data['messages'] = messages
+        data['tools'] = tools
         let responce = await fetch(url, {
             method: 'POST',
             headers: headers,

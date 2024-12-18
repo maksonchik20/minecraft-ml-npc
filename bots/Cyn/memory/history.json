@@ -6,7 +6,16 @@
         },
         {
             "role": "assistant",
-            "text": "[]"
+            "toolCallList": {
+                "toolCalls": [
+                    {
+                        "functionCall": {
+                            "name": "stop_function",
+                            "arguments": {}
+                        }
+                    }
+                ]
+            }
         },
         {
             "role": "user",
@@ -14,99 +23,189 @@
         },
         {
             "role": "assistant",
-            "text": "[{\"type\":\"command\",\"command_type\":\"chat\",\"message\":\"Привет, Other_Gamer!\"}]"
+            "toolCallList": {
+                "toolCalls": [
+                    {
+                        "functionCall": {
+                            "name": "chat",
+                            "arguments": {
+                                "message": "Привет! Как дела? Я готов помочь тебе с чем-нибудь в майнкрафте."
+                            }
+                        }
+                    }
+                ]
+            }
         },
         {
-            "role": "user",
-            "text": "[{\"type\":\"event\",\"event_type\":\"command_complete_ok\",\"command_type\":\"chat\"}]"
-        },
-        {
-            "role": "assistant",
-            "text": "[]"
-        },
-        {
-            "role": "user",
-            "text": "[{\"type\":\"event\",\"event_type\":\"chat\",\"player_name\":\"Other_Gamer\",\"message\":\"Чё как там?\"}]"
-        },
-        {
-            "role": "assistant",
-            "text": "[{\"type\":\"command\",\"command_type\":\"chat\",\"message\":\"Всё хорошо, Other_Gamer! Как у тебя дела?\"}]"
-        },
-        {
-            "role": "user",
-            "text": "[{\"type\":\"event\",\"event_type\":\"command_complete_ok\",\"command_type\":\"chat\"}]"
-        },
-        {
-            "role": "assistant",
-            "text": "[]"
-        },
-        {
-            "role": "user",
-            "text": "[{\"type\":\"event\",\"event_type\":\"chat\",\"player_name\":\"Other_Gamer\",\"message\":\"Норм\"}]"
+            "role": "system",
+            "toolResultList": {
+                "toolResults": [
+                    {
+                        "functionResult": {
+                            "name": "chat",
+                            "content": "Ты отправил сообщение"
+                        }
+                    }
+                ]
+            }
         },
         {
             "role": "assistant",
-            "text": "[{\"type\":\"command\",\"command_type\":\"chat\",\"message\":\"Рад слышать, Other_Gamer!\"}]"
+            "toolCallList": {
+                "toolCalls": [
+                    {
+                        "functionCall": {
+                            "name": "chat",
+                            "arguments": {
+                                "message": "Привет! Я готов помочь тебе с чем-нибудь в майнкрафте."
+                            }
+                        }
+                    }
+                ]
+            }
         },
         {
-            "role": "user",
-            "text": "[{\"type\":\"event\",\"event_type\":\"command_complete_ok\",\"command_type\":\"chat\"}]"
-        },
-        {
-            "role": "assistant",
-            "text": "[]"
-        },
-        {
-            "role": "user",
-            "text": "[{\"type\":\"event\",\"event_type\":\"chat\",\"player_name\":\"Other_Gamer\",\"message\":\"Реши уравнение 2x + 1 = 5\"}]"
-        },
-        {
-            "role": "assistant",
-            "text": "[{\"type\":\"command\",\"command_type\":\"chat\",\"message\":\"x = 2\"}]"
-        },
-        {
-            "role": "user",
-            "text": "[{\"type\":\"event\",\"event_type\":\"command_complete_ok\",\"command_type\":\"chat\"}]"
-        },
-        {
-            "role": "assistant",
-            "text": "[]"
-        },
-        {
-            "role": "user",
-            "text": "[{\"type\":\"event\",\"event_type\":\"chat\",\"player_name\":\"Other_Gamer\",\"message\":\"Напиши код odd-even\"}]"
-        },
-        {
-            "role": "user",
-            "text": "[{\"type\":\"event\",\"event_type\":\"bot_joined\"}]"
-        },
-        {
-            "role": "user",
-            "text": "[{\"type\":\"event\",\"event_type\":\"chat\",\"player_name\":\"Other_Gamer\",\"message\":\"О чём мы говорили в прошлый раз?\"}]"
+            "role": "system",
+            "toolResultList": {
+                "toolResults": [
+                    {
+                        "functionResult": {
+                            "name": "chat",
+                            "content": "Ты отправил сообщение"
+                        }
+                    }
+                ]
+            }
         },
         {
             "role": "assistant",
-            "text": "[{\"type\":\"command\",\"command_type\":\"chat\",\"message\":\"Мы обсуждали, как разделить числа на чётные и нечётные с помощью условного оператора. Я предложил пример кода для этой задачи.\"}]"
+            "toolCallList": {
+                "toolCalls": [
+                    {
+                        "functionCall": {
+                            "name": "chat",
+                            "arguments": {
+                                "message": "Привет! Я готов помочь тебе с чем-нибудь в майнкрафте."
+                            }
+                        }
+                    },
+                    {
+                        "functionCall": {
+                            "name": "chat",
+                            "arguments": {
+                                "message": "Я здесь, чтобы ответить на твои вопросы или выполнить задания. Что бы ты хотел сделать?"
+                            }
+                        }
+                    }
+                ]
+            }
         },
         {
-            "role": "user",
-            "text": "[{\"type\":\"event\",\"event_type\":\"command_complete_ok\",\"command_type\":\"chat\"}]"
+            "role": "system",
+            "toolResultList": {
+                "toolResults": [
+                    {
+                        "functionResult": {
+                            "name": "chat",
+                            "content": "Ты отправил сообщение"
+                        }
+                    },
+                    {
+                        "functionResult": {
+                            "name": "chat",
+                            "content": "Ты отправил сообщение"
+                        }
+                    }
+                ]
+            }
         },
         {
             "role": "assistant",
-            "text": "[]"
+            "toolCallList": {
+                "toolCalls": [
+                    {
+                        "functionCall": {
+                            "name": "chat",
+                            "arguments": {
+                                "message": "Привет! Я готов помочь тебе с чем-нибудь в майнкрафте. Что бы ты хотел сделать?"
+                            }
+                        }
+                    }
+                ]
+            }
         },
         {
-            "role": "user",
-            "text": "[{\"type\":\"event\",\"event_type\":\"chat\",\"player_name\":\"Other_Gamer\",\"message\":\"Запомни число x=5\"}]"
+            "role": "system",
+            "toolResultList": {
+                "toolResults": [
+                    {
+                        "functionResult": {
+                            "name": "chat",
+                            "content": "Ты отправил сообщение"
+                        }
+                    }
+                ]
+            }
         },
         {
             "role": "assistant",
-            "text": "[{\"type\":\"command\",\"command_type\":\"chat\",\"message\":\"Хорошо, я запомнил: x=5.\"}]"
+            "toolCallList": {
+                "toolCalls": [
+                    {
+                        "functionCall": {
+                            "name": "chat",
+                            "arguments": {
+                                "message": "Я здесь, чтобы помочь тебе с любыми вопросами или задачами в майнкрафте. Просто скажи мне, что тебе нужно, и я постараюсь это сделать!"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "role": "system",
+            "toolResultList": {
+                "toolResults": [
+                    {
+                        "functionResult": {
+                            "name": "chat",
+                            "content": "Ты отправил сообщение"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "role": "assistant",
+            "toolCallList": {
+                "toolCalls": [
+                    {
+                        "functionCall": {
+                            "name": "chat",
+                            "arguments": {
+                                "message": "Привет! Я готов помочь тебе с любыми вопросами или задачами в майнкрафте. Просто скажи мне, что тебе нужно, и я постараюсь это сделать!"
+                            }
+                        }
+                    }
+                ]
+            }
         },
         {
             "role": "user",
-            "text": "[{\"type\":\"event\",\"event_type\":\"command_complete_ok\",\"command_type\":\"chat\"}]"
+            "text": "[{\"type\":\"event\",\"event_type\":\"chat\",\"player_name\":\"Other_Gamer\",\"message\":\"Можешь не писать так много?\"}]"
+        },
+        {
+            "role": "system",
+            "toolResultList": {
+                "toolResults": [
+                    {
+                        "functionResult": {
+                            "name": "chat",
+                            "content": "Ты отправил сообщение"
+                        }
+                    }
+                ]
+            }
         }
     ]
 }

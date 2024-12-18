@@ -2,6 +2,8 @@ const { Vec3 } = require('vec3')
 const { RaycastIterator } = require('prismarine-world').iterators
 const mc = require('minecraft-protocol')
 const { testedVersions, latestSupportedVersion, oldestSupportedVersion } = require('mineflayer')
+const Ajv = require("ajv")
+const ajv = new Ajv();
 
 function getViewDirection (pitch, yaw) {
     const csPitch = Math.cos(pitch)
@@ -102,5 +104,6 @@ module.exports = {
     attackPlayer: attackPlayer,
     attackEntity: attackEntity,
     createConsole: createConsole,
-    isEntityLookingAtBot: isEntityLookingAtBot
+    isEntityLookingAtBot: isEntityLookingAtBot,
+    ajv: ajv
 }

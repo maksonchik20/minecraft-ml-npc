@@ -10,11 +10,6 @@ function createGoal(options) {
                 return 5;
             return 90;
         },
-        look: (bot, goal) => {
-            if(goal.lost)
-                return GOAL_DESTROY;
-            return 40;
-        },
         dig: (bot, goal) => {
             return 70
         },
