@@ -2,24 +2,7 @@
     "messages": [
         {
             "role": "user",
-            "text": "[{\"type\":\"event\",\"event_type\":\"bot_joined\"}]"
-        },
-        {
-            "role": "assistant",
-            "toolCallList": {
-                "toolCalls": [
-                    {
-                        "functionCall": {
-                            "name": "stop_function",
-                            "arguments": {}
-                        }
-                    }
-                ]
-            }
-        },
-        {
-            "role": "user",
-            "text": "[{\"type\":\"event\",\"event_type\":\"chat\",\"player_name\":\"Other_Gamer\",\"message\":\"Привет!\"}]"
+            "text": "[Событие]: Бот зашёл на сервер\""
         },
         {
             "role": "assistant",
@@ -29,161 +12,7 @@
                         "functionCall": {
                             "name": "chat",
                             "arguments": {
-                                "message": "Привет! Как дела? Я готов помочь тебе с чем-нибудь в майнкрафте."
-                            }
-                        }
-                    }
-                ]
-            }
-        },
-        {
-            "role": "system",
-            "toolResultList": {
-                "toolResults": [
-                    {
-                        "functionResult": {
-                            "name": "chat",
-                            "content": "Ты отправил сообщение"
-                        }
-                    }
-                ]
-            }
-        },
-        {
-            "role": "assistant",
-            "toolCallList": {
-                "toolCalls": [
-                    {
-                        "functionCall": {
-                            "name": "chat",
-                            "arguments": {
-                                "message": "Привет! Я готов помочь тебе с чем-нибудь в майнкрафте."
-                            }
-                        }
-                    }
-                ]
-            }
-        },
-        {
-            "role": "system",
-            "toolResultList": {
-                "toolResults": [
-                    {
-                        "functionResult": {
-                            "name": "chat",
-                            "content": "Ты отправил сообщение"
-                        }
-                    }
-                ]
-            }
-        },
-        {
-            "role": "assistant",
-            "toolCallList": {
-                "toolCalls": [
-                    {
-                        "functionCall": {
-                            "name": "chat",
-                            "arguments": {
-                                "message": "Привет! Я готов помочь тебе с чем-нибудь в майнкрафте."
-                            }
-                        }
-                    },
-                    {
-                        "functionCall": {
-                            "name": "chat",
-                            "arguments": {
-                                "message": "Я здесь, чтобы ответить на твои вопросы или выполнить задания. Что бы ты хотел сделать?"
-                            }
-                        }
-                    }
-                ]
-            }
-        },
-        {
-            "role": "system",
-            "toolResultList": {
-                "toolResults": [
-                    {
-                        "functionResult": {
-                            "name": "chat",
-                            "content": "Ты отправил сообщение"
-                        }
-                    },
-                    {
-                        "functionResult": {
-                            "name": "chat",
-                            "content": "Ты отправил сообщение"
-                        }
-                    }
-                ]
-            }
-        },
-        {
-            "role": "assistant",
-            "toolCallList": {
-                "toolCalls": [
-                    {
-                        "functionCall": {
-                            "name": "chat",
-                            "arguments": {
-                                "message": "Привет! Я готов помочь тебе с чем-нибудь в майнкрафте. Что бы ты хотел сделать?"
-                            }
-                        }
-                    }
-                ]
-            }
-        },
-        {
-            "role": "system",
-            "toolResultList": {
-                "toolResults": [
-                    {
-                        "functionResult": {
-                            "name": "chat",
-                            "content": "Ты отправил сообщение"
-                        }
-                    }
-                ]
-            }
-        },
-        {
-            "role": "assistant",
-            "toolCallList": {
-                "toolCalls": [
-                    {
-                        "functionCall": {
-                            "name": "chat",
-                            "arguments": {
-                                "message": "Я здесь, чтобы помочь тебе с любыми вопросами или задачами в майнкрафте. Просто скажи мне, что тебе нужно, и я постараюсь это сделать!"
-                            }
-                        }
-                    }
-                ]
-            }
-        },
-        {
-            "role": "system",
-            "toolResultList": {
-                "toolResults": [
-                    {
-                        "functionResult": {
-                            "name": "chat",
-                            "content": "Ты отправил сообщение"
-                        }
-                    }
-                ]
-            }
-        },
-        {
-            "role": "assistant",
-            "toolCallList": {
-                "toolCalls": [
-                    {
-                        "functionCall": {
-                            "name": "chat",
-                            "arguments": {
-                                "message": "Привет! Я готов помочь тебе с любыми вопросами или задачами в майнкрафте. Просто скажи мне, что тебе нужно, и я постараюсь это сделать!"
+                                "message": "Привет! Я новый игрок на сервере."
                             }
                         }
                     }
@@ -192,10 +21,682 @@
         },
         {
             "role": "user",
-            "text": "[{\"type\":\"event\",\"event_type\":\"chat\",\"player_name\":\"Other_Gamer\",\"message\":\"Можешь не писать так много?\"}]"
+            "toolResultList": {
+                "toolResults": [
+                    {
+                        "functionResult": {
+                            "name": "chat",
+                            "content": "Ты отправил сообщение"
+                        }
+                    }
+                ]
+            }
         },
         {
-            "role": "system",
+            "role": "assistant",
+            "toolCallList": {
+                "toolCalls": [
+                    {
+                        "functionCall": {
+                            "name": "chat",
+                            "arguments": {
+                                "message": "Я готов начать игру. Какие у нас правила?"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "role": "user",
+            "toolResultList": {
+                "toolResults": [
+                    {
+                        "functionResult": {
+                            "name": "chat",
+                            "content": "Ты отправил сообщение"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "role": "assistant",
+            "toolCallList": {
+                "toolCalls": [
+                    {
+                        "functionCall": {
+                            "name": "chat",
+                            "arguments": {
+                                "message": "Я готов начать игру. Какие у нас правила?"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "role": "user",
+            "toolResultList": {
+                "toolResults": [
+                    {
+                        "functionResult": {
+                            "name": "chat",
+                            "content": "Ты отправил сообщение"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "role": "assistant",
+            "toolCallList": {
+                "toolCalls": [
+                    {
+                        "functionCall": {
+                            "name": "chat",
+                            "arguments": {
+                                "message": "Я готов начать игру. Какие у нас правила?"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "role": "user",
+            "toolResultList": {
+                "toolResults": [
+                    {
+                        "functionResult": {
+                            "name": "chat",
+                            "content": "Ты отправил сообщение"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "role": "assistant",
+            "toolCallList": {
+                "toolCalls": [
+                    {
+                        "functionCall": {
+                            "name": "chat",
+                            "arguments": {
+                                "message": "Я готов начать игру. Какие у нас правила?"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "role": "user",
+            "toolResultList": {
+                "toolResults": [
+                    {
+                        "functionResult": {
+                            "name": "chat",
+                            "content": "Ты отправил сообщение"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "role": "assistant",
+            "toolCallList": {
+                "toolCalls": [
+                    {
+                        "functionCall": {
+                            "name": "chat",
+                            "arguments": {
+                                "message": "Я готов начать игру. Какие у нас правила?"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "role": "user",
+            "toolResultList": {
+                "toolResults": [
+                    {
+                        "functionResult": {
+                            "name": "chat",
+                            "content": "Ты отправил сообщение"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "role": "assistant",
+            "toolCallList": {
+                "toolCalls": [
+                    {
+                        "functionCall": {
+                            "name": "chat",
+                            "arguments": {
+                                "message": "Я готов начать игру. Какие у нас правила?"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "role": "user",
+            "toolResultList": {
+                "toolResults": [
+                    {
+                        "functionResult": {
+                            "name": "chat",
+                            "content": "Ты отправил сообщение"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "role": "assistant",
+            "toolCallList": {
+                "toolCalls": [
+                    {
+                        "functionCall": {
+                            "name": "chat",
+                            "arguments": {
+                                "message": "Теперь я жду ответа от сервера, чтобы узнать правила игры."
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "role": "user",
+            "toolResultList": {
+                "toolResults": [
+                    {
+                        "functionResult": {
+                            "name": "chat",
+                            "content": "Ты отправил сообщение"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "role": "assistant",
+            "toolCallList": {
+                "toolCalls": [
+                    {
+                        "functionCall": {
+                            "name": "chat",
+                            "arguments": {
+                                "message": "Теперь я жду ответа от сервера, чтобы узнать правила игры."
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "role": "user",
+            "toolResultList": {
+                "toolResults": [
+                    {
+                        "functionResult": {
+                            "name": "chat",
+                            "content": "Ты отправил сообщение"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "role": "user",
+            "text": "[Событие]: Бот зашёл на сервер\""
+        },
+        {
+            "role": "assistant",
+            "toolCallList": {
+                "toolCalls": [
+                    {
+                        "functionCall": {
+                            "name": "chat",
+                            "arguments": {
+                                "message": "Привет, я новый игрок на сервере! Как тут дела?"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "role": "user",
+            "toolResultList": {
+                "toolResults": [
+                    {
+                        "functionResult": {
+                            "name": "chat",
+                            "content": "Ты отправил сообщение"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "role": "assistant",
+            "toolCallList": {
+                "toolCalls": [
+                    {
+                        "functionCall": {
+                            "name": "chat",
+                            "arguments": {
+                                "message": "Я только что зашёл на сервер, всё выглядит круто! Какие тут есть активности?"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "role": "user",
+            "toolResultList": {
+                "toolResults": [
+                    {
+                        "functionResult": {
+                            "name": "chat",
+                            "content": "Ты отправил сообщение"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "role": "assistant",
+            "toolCallList": {
+                "toolCalls": [
+                    {
+                        "functionCall": {
+                            "name": "chat",
+                            "arguments": {
+                                "message": "Привет, ребята! Я новенький на сервере. Какие тут есть активности?"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "role": "user",
+            "toolResultList": {
+                "toolResults": [
+                    {
+                        "functionResult": {
+                            "name": "chat",
+                            "content": "Ты отправил сообщение"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "role": "assistant",
+            "toolCallList": {
+                "toolCalls": [
+                    {
+                        "functionCall": {
+                            "name": "chat",
+                            "arguments": {
+                                "message": "Я заметил, что тут есть несколько интересных мест для исследования. Может быть, кто-то хочет присоединиться?"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "role": "user",
+            "toolResultList": {
+                "toolResults": [
+                    {
+                        "functionResult": {
+                            "name": "chat",
+                            "content": "Ты отправил сообщение"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "role": "assistant",
+            "toolCallList": {
+                "toolCalls": [
+                    {
+                        "functionCall": {
+                            "name": "chat",
+                            "arguments": {
+                                "message": "Привет! Я новый игрок на сервере. Как тут дела?"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "role": "user",
+            "toolResultList": {
+                "toolResults": [
+                    {
+                        "functionResult": {
+                            "name": "chat",
+                            "content": "Ты отправил сообщение"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "role": "assistant",
+            "toolCallList": {
+                "toolCalls": [
+                    {
+                        "functionCall": {
+                            "name": "chat",
+                            "arguments": {
+                                "message": "Я заметил, что тут много игроков. Кто-нибудь может помочь мне с основами?"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "role": "user",
+            "toolResultList": {
+                "toolResults": [
+                    {
+                        "functionResult": {
+                            "name": "chat",
+                            "content": "Ты отправил сообщение"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "role": "assistant",
+            "toolCallList": {
+                "toolCalls": [
+                    {
+                        "functionCall": {
+                            "name": "chat",
+                            "arguments": {
+                                "message": "Привет! Я новичок в этом сервере. Можете рассказать мне, что тут интересного?"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "role": "user",
+            "toolResultList": {
+                "toolResults": [
+                    {
+                        "functionResult": {
+                            "name": "chat",
+                            "content": "Ты отправил сообщение"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "role": "assistant",
+            "toolCallList": {
+                "toolCalls": [
+                    {
+                        "functionCall": {
+                            "name": "chat",
+                            "arguments": {
+                                "message": "Я заметил, что тут много игроков. Как вы обычно проводите время на сервере?"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "role": "user",
+            "toolResultList": {
+                "toolResults": [
+                    {
+                        "functionResult": {
+                            "name": "chat",
+                            "content": "Ты отправил сообщение"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "role": "assistant",
+            "toolCallList": {
+                "toolCalls": [
+                    {
+                        "functionCall": {
+                            "name": "chat",
+                            "arguments": {
+                                "message": "Я заметил, что тут много игроков. Как вы обычно проводите время на сервере? Я люблю строить и исследовать новые места."
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "role": "user",
+            "toolResultList": {
+                "toolResults": [
+                    {
+                        "functionResult": {
+                            "name": "chat",
+                            "content": "Ты отправил сообщение"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "role": "assistant",
+            "toolCallList": {
+                "toolCalls": [
+                    {
+                        "functionCall": {
+                            "name": "chat",
+                            "arguments": {
+                                "message": "Я заметил, что тут много игроков. Как вы обычно проводите время на сервере? Я люблю строить и исследовать новые места."
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "role": "user",
+            "toolResultList": {
+                "toolResults": [
+                    {
+                        "functionResult": {
+                            "name": "chat",
+                            "content": "Ты отправил сообщение"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "role": "assistant",
+            "toolCallList": {
+                "toolCalls": [
+                    {
+                        "functionCall": {
+                            "name": "chat",
+                            "arguments": {
+                                "message": "Я заметил, что тут много игроков. Как вы обычно проводите время на сервере? Я люблю строить и исследовать новые места."
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "role": "user",
+            "toolResultList": {
+                "toolResults": [
+                    {
+                        "functionResult": {
+                            "name": "chat",
+                            "content": "Ты отправил сообщение"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "role": "assistant",
+            "toolCallList": {
+                "toolCalls": [
+                    {
+                        "functionCall": {
+                            "name": "chat",
+                            "arguments": {
+                                "message": "Я заметил, что тут много игроков. Как вы обычно проводите время на сервере? Я люблю строить и исследовать новые места."
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "role": "user",
+            "toolResultList": {
+                "toolResults": [
+                    {
+                        "functionResult": {
+                            "name": "chat",
+                            "content": "Ты отправил сообщение"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "role": "assistant",
+            "toolCallList": {
+                "toolCalls": [
+                    {
+                        "functionCall": {
+                            "name": "chat",
+                            "arguments": {
+                                "message": "Привет! Я новичок на этом сервере. Подскажите, пожалуйста, где тут можно найти интересные места для исследования?"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "role": "user",
+            "toolResultList": {
+                "toolResults": [
+                    {
+                        "functionResult": {
+                            "name": "chat",
+                            "content": "Ты отправил сообщение"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "role": "assistant",
+            "toolCallList": {
+                "toolCalls": [
+                    {
+                        "functionCall": {
+                            "name": "chat",
+                            "arguments": {
+                                "message": "Я заметил, что тут много игроков. Может быть, кто-то захочет присоединиться ко мне в исследовании? Я готов поделиться ресурсами и помочь с постройками."
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "role": "user",
+            "toolResultList": {
+                "toolResults": [
+                    {
+                        "functionResult": {
+                            "name": "chat",
+                            "content": "Ты отправил сообщение"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "role": "assistant",
+            "toolCallList": {
+                "toolCalls": [
+                    {
+                        "functionCall": {
+                            "name": "chat",
+                            "arguments": {
+                                "message": "Привет, я новый игрок на сервере. Меня зовут Легенда. Я готов исследовать мир и строить вместе с вами."
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "role": "user",
+            "toolResultList": {
+                "toolResults": [
+                    {
+                        "functionResult": {
+                            "name": "chat",
+                            "content": "Ты отправил сообщение"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "role": "assistant",
+            "toolCallList": {
+                "toolCalls": [
+                    {
+                        "functionCall": {
+                            "name": "chat",
+                            "arguments": {
+                                "message": "Я слышал, что здесь есть интересные места для исследования. Может быть, кто-то из вас знает, где можно найти редкие ресурсы или опасные мобы?"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "role": "user",
             "toolResultList": {
                 "toolResults": [
                     {

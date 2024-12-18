@@ -21,7 +21,7 @@ async function add(console, bot) {
     
     bot.behaviors.eventPool.addEvent = (event) => {
         idleCycles = maxIdleCycles;
-        bot.behaviors.eventPool.pool.push({type: 'event', ...event})
+        bot.behaviors.eventPool.pool.push(event)
     }
 
     bot.behaviors.eventPool.addCallbackEvent = (name, result) => {
@@ -33,13 +33,13 @@ async function add(console, bot) {
     memory = JSON.parse(await fs.readFile('./bots/Cyn/memory/history.json')).messages
 
     bot.on('end', async () => {
-        bot.behaviors.eventPool.addEvent({'event_type': 'bot_left'})
+        bot.behaviors.eventPool.addEvent(`[Событие]: Бот покинул сервер"`)
         await fs.writeFile('./bots/Cyn/memory/history.json', JSON.stringify({messages: memory}, null, 4));
     })
 
     bot.on('chat', (username, message) => {
         if(username == bot.username) return;
-        bot.behaviors.eventPool.addEvent({'event_type': 'chat', 'player_name': username, 'message': message});
+        bot.behaviors.eventPool.addEvent(`[Событие]: Игрок "${username}" написал "${message}"`);
     })
 
     let gptAnswer = require('./schemas/gptAnswer')
@@ -180,17 +180,17 @@ async function add(console, bot) {
         }
 
         if(bot.behaviors.eventPool.pool.length != 0) {
-            let text = '['
+            let text = ""
+
             bot.behaviors.eventPool.pool.forEach(event => {
-                text += JSON.stringify(event);
-                text += ','
+                text += event;
+                text += '\n'
             });
             bot.behaviors.eventPool.pool = []
-            if(text.endsWith(',')) {
+            if(text.endsWith('\n')) {
                 text = text.substring(0, text.length - 1);
             }
-            text += ']'
-            if(text == '[]') return;
+            if(text.length == 0) return;
             memory.push({
                 'role': 'user',
                 'text': text

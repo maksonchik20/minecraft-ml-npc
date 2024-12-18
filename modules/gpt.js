@@ -11,7 +11,7 @@ function add(console, bot) {
         let data = {}
         data['modelUri'] = 'gpt://b1glpqm6du4km50rq59p/yandexgpt/latest'
         data['completionOptions'] = {'stream': false,
-            'temperature': 0.25,
+            'temperature': 0.4,
             'maxTokens': maxTokens}
         data['messages'] = messages
         data['tools'] = tools
