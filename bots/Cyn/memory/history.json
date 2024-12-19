@@ -2,7 +2,15 @@
     "messages": [
         {
             "role": "user",
-            "text": "[{\"type\":\"event\",\"event_type\":\"bot_joined\"}]"
+            "text": "[Бот]: Ты зашёл на сервер\n"
+        },
+        {
+            "role": "assistant",
+            "text": "[{\"command_type\":\"chat\",\"message\":\"Привет, я готов помочь!\"}]"
+        },
+        {
+            "role": "user",
+            "text": "[Команда]: \"chat\" успешно выполнена, это результат выполнения команды, не обращай внимание\n"
         },
         {
             "role": "assistant",
@@ -10,31 +18,19 @@
         },
         {
             "role": "user",
-            "text": "[{\"type\":\"event\",\"event_type\":\"chat\",\"player_name\":\"Other_Gamer\",\"message\":\"Привет!\"}]"
+            "text": "[Чат]: Игрок \"Server\" отправил сообщение \"Привет!\"\n"
         },
         {
             "role": "assistant",
-            "text": "[{\"type\":\"command\",\"command_type\":\"chat\",\"message\":\"Привет, Other_Gamer!\"}]"
-        },
-        {
-            "role": "user",
-            "text": "[{\"type\":\"event\",\"event_type\":\"command_complete_ok\",\"command_type\":\"chat\"}]"
+            "text": "[REASONING] Игрок написал приветствие, нужно ему ответить\n\n[\n    {\n        \"command_type\": \"chat\",\n        \"message\": \"Привет Server!\"\n    }\n]"
         },
         {
             "role": "assistant",
-            "text": "[]"
+            "text": "[{\"command_type\":\"chat\",\"message\":\"Привет Server!\"}]"
         },
         {
             "role": "user",
-            "text": "[{\"type\":\"event\",\"event_type\":\"chat\",\"player_name\":\"Other_Gamer\",\"message\":\"Чё как там?\"}]"
-        },
-        {
-            "role": "assistant",
-            "text": "[{\"type\":\"command\",\"command_type\":\"chat\",\"message\":\"Всё хорошо, Other_Gamer! Как у тебя дела?\"}]"
-        },
-        {
-            "role": "user",
-            "text": "[{\"type\":\"event\",\"event_type\":\"command_complete_ok\",\"command_type\":\"chat\"}]"
+            "text": "[Команда]: \"chat\" успешно выполнена, это результат выполнения команды, не обращай внимание\n"
         },
         {
             "role": "assistant",
@@ -42,71 +38,23 @@
         },
         {
             "role": "user",
-            "text": "[{\"type\":\"event\",\"event_type\":\"chat\",\"player_name\":\"Other_Gamer\",\"message\":\"Норм\"}]"
+            "text": "[Чат]: Игрок \"Server\" отправил сообщение \"Как дела?\"\n"
         },
         {
             "role": "assistant",
-            "text": "[{\"type\":\"command\",\"command_type\":\"chat\",\"message\":\"Рад слышать, Other_Gamer!\"}]"
-        },
-        {
-            "role": "user",
-            "text": "[{\"type\":\"event\",\"event_type\":\"command_complete_ok\",\"command_type\":\"chat\"}]"
+            "text": "[REASONING] Игрок интересуется, как у меня дела, нужно ему ответить\n\n[\n    {\n        \"command_type\": \"chat\",\n        \"message\": \"У меня всё хорошо, спасибо! А у тебя как дела?\"\n    }\n]"
         },
         {
             "role": "assistant",
-            "text": "[]"
+            "text": "[{\"command_type\":\"chat\",\"message\":\"У меня всё хорошо, спасибо! А у тебя как дела?\"}]"
         },
         {
             "role": "user",
-            "text": "[{\"type\":\"event\",\"event_type\":\"chat\",\"player_name\":\"Other_Gamer\",\"message\":\"Реши уравнение 2x + 1 = 5\"}]"
-        },
-        {
-            "role": "assistant",
-            "text": "[{\"type\":\"command\",\"command_type\":\"chat\",\"message\":\"x = 2\"}]"
-        },
-        {
-            "role": "user",
-            "text": "[{\"type\":\"event\",\"event_type\":\"command_complete_ok\",\"command_type\":\"chat\"}]"
+            "text": "[Команда]: \"chat\" успешно выполнена, это результат выполнения команды, не обращай внимание\n"
         },
         {
             "role": "assistant",
             "text": "[]"
-        },
-        {
-            "role": "user",
-            "text": "[{\"type\":\"event\",\"event_type\":\"chat\",\"player_name\":\"Other_Gamer\",\"message\":\"Напиши код odd-even\"}]"
-        },
-        {
-            "role": "user",
-            "text": "[{\"type\":\"event\",\"event_type\":\"bot_joined\"}]"
-        },
-        {
-            "role": "user",
-            "text": "[{\"type\":\"event\",\"event_type\":\"chat\",\"player_name\":\"Other_Gamer\",\"message\":\"О чём мы говорили в прошлый раз?\"}]"
-        },
-        {
-            "role": "assistant",
-            "text": "[{\"type\":\"command\",\"command_type\":\"chat\",\"message\":\"Мы обсуждали, как разделить числа на чётные и нечётные с помощью условного оператора. Я предложил пример кода для этой задачи.\"}]"
-        },
-        {
-            "role": "user",
-            "text": "[{\"type\":\"event\",\"event_type\":\"command_complete_ok\",\"command_type\":\"chat\"}]"
-        },
-        {
-            "role": "assistant",
-            "text": "[]"
-        },
-        {
-            "role": "user",
-            "text": "[{\"type\":\"event\",\"event_type\":\"chat\",\"player_name\":\"Other_Gamer\",\"message\":\"Запомни число x=5\"}]"
-        },
-        {
-            "role": "assistant",
-            "text": "[{\"type\":\"command\",\"command_type\":\"chat\",\"message\":\"Хорошо, я запомнил: x=5.\"}]"
-        },
-        {
-            "role": "user",
-            "text": "[{\"type\":\"event\",\"event_type\":\"command_complete_ok\",\"command_type\":\"chat\"}]"
         }
     ]
 }

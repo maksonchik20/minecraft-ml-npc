@@ -17,23 +17,24 @@ async function add(console, bot) {
     bot.behaviors.eventPool.pending = false;
     
     bot.behaviors.eventPool.pool = []
+    bot.behaviors.eventPool.reRun = false;
     
-    bot.behaviors.eventPool.addEvent = (event) => {
+    bot.behaviors.eventPool.addEvent = (event_type, event) => {
         idleCycles = maxIdleCycles;
-        bot.behaviors.eventPool.pool.push({type: 'event', ...event})
+        bot.behaviors.eventPool.pool.push(`[${event_type}]: ${event}`)
     }
 
     let memory = []
     memory = JSON.parse(await fs.readFile('./bots/Cyn/memory/history.json')).messages
 
     bot.on('end', async () => {
-        bot.behaviors.eventPool.addEvent({'event_type': 'bot_left'})
+        bot.behaviors.eventPool.addEvent('Бот', 'Ты покинул игру')
         await fs.writeFile('./bots/Cyn/memory/history.json', JSON.stringify({messages: memory}, null, 4));
     })
 
     bot.on('chat', (username, message) => {
         if(username == bot.username) return;
-        bot.behaviors.eventPool.addEvent({'event_type': 'chat', 'player_name': username, 'message': message});
+        bot.behaviors.eventPool.addEvent(`Чат`, `Игрок "${username}" отправил сообщение "${message}"`);
     })
 
     let gptAnswer = ajv.compile({
@@ -41,10 +42,9 @@ async function add(console, bot) {
         items: {
             type: 'object',
             properties: {
-                type: {type: 'string', pattern: '^command$'},
                 command_type: {type: 'string'}
             },
-            required: ['type', 'command_type']
+            required: ['command_type']
         }
     })
 
@@ -52,56 +52,50 @@ async function add(console, bot) {
         'follow': ajv.compile({
             type: "object",
             properties: {
-                type: {type: "string", pattern: "^command$"},
                 command_type: {type: "string", pattern: "^follow$"},
                 player_name: {type: "string"}
             },
             additionalProperties: false,
-            required: ["type", "command_type", "player_name"]
+            required: ["command_type", "player_name"]
         }),
         'stop_follow': ajv.compile({
             type: "object",
             properties: {
-                type: {type: "string", pattern: "^command$"},
                 command_type: {type: "string", pattern: "^stop_follow$"},
                 player_name: {type: "string"}
             },
             additionalProperties: false,
-            required: ["type", "command_type", "player_name"]
+            required: ["command_type", "player_name"]
         }),
         'chat': ajv.compile({
             type: "object",
             properties: {
-                type: {type: "string", pattern: "^command$"},
                 command_type: {type: "string", pattern: "^chat$"},
-                message: {type: "string", minLength: 1, maxLength: 250}
+                message: {type: "string", minLength: 1}
             },
             additionalProperties: false,
-            required: ["type", "command_type", "message"]
+            required: ["command_type", "message"]
         })
     }
 
     function validateCommand(obj) {
         if(commandSchemas[obj.command_type] == undefined) {
-            console.log(`Command not found ${obj.command_type}`)
-            return false;
+            throw new Error(`Команды "${obj.command_type}" не существует, попробуй ещё раз`)
         }
         result = commandSchemas[obj.command_type](obj)
         if(!result) {
-            console.error(`Wrong format of command ${obj.command_type}, ${JSON.stringify(obj)}`)
-            return false;
+            throw new Error(`Команда "${obj.command_type}" в неправильном формате, попробуй ещё раз`)
         }
-        return true;
     }
 
     function runCommand(obj) {
         switch (obj.command_type) {
             case 'chat':
                 bot.chat(obj.message)
-                bot.behaviors.eventPool.addEvent({'event_type': 'command_complete_ok', 'command_type': 'chat'});
+                bot.behaviors.eventPool.addEvent('Команда', '"chat" успешно выполнена, это результат выполнения команды, не обращай внимание');
                 break;
             default:
-                bot.behaviors.eventPool.addEvent({'event_type': 'command_complete_ok', 'command_type': obj.command_type});
+                bot.behaviors.eventPool.addEvent('Команда', `"${obj.command_type}" успешно выполнена, это результат выполнения команды, не обращай внимание`);
                 console.log(`Not supported yet ${obj.command_type}`)
                 break;
         }
@@ -116,53 +110,55 @@ async function add(console, bot) {
             res = res.substring(0, res.length - 3);
         }
 
-        let errorStr = "Ты используешь не правильный формат ответа, попробуй ещё раз"
+        if(res.startsWith('[REASONING]')) {
+            bot.behaviors.eventPool.reRun = true;
+            return {res: res, status: true};
+        }
 
         try {
-            let json = JSON.parse(res);
+
+            let json = undefined;
+
+            try {
+                json = JSON.parse(res);
+            } catch {
+                throw new Error('Формат ответа должен быть json, попробуй ещё раз')
+            }
 
             if(!gptAnswer(json)) {
-                errorStr = "Ты используешь не правильный формат ответа, попробуй ещё раз"
-                throw new Error('Wrong answer format')
+                throw new Error('Ты используешь неправильный формат ответа, попробуй ещё раз')
             }
 
             if(json != undefined) {
                 json.forEach((command) => {
-                    if(!validateCommand(command)) {
-                        errorStr = "Ты используешь не правильный формат комманды, попробуй ещё раз"
-                        throw new Error('Wrong command format')
-                    }
+                    validateCommand(command);
                 })
             } else {
-                errorStr = "Ты используешь не правильный формат ответа, попробуй ещё раз"
-                throw new Error('Wrong answer format')
+                throw new Error('Ты используешь неправильный формат ответа, попробуй ещё раз')
             }
 
             return {res: json, status: true};
         } catch(e) {
             console.error(e);
-            return {res: res, status: false, errorStr: errorStr};
+            return {res: res, status: false, errorStr: e};
         }
     }
     
     bot.behaviors.eventPool.send = async () => {
         bot.behaviors.eventPool.pending = true;
 
-        let text = '['
+        let text = ''
         bot.behaviors.eventPool.pool.forEach(event => {
-            text += JSON.stringify(event);
-            text += ','
+            text += event;
+            text += '\n'
         });
         bot.behaviors.eventPool.pool = []
-        if(text.endsWith(',')) {
-            text = text.substring(0, text.length - 1);
+        if(text !== '') {
+            memory.push({
+                'role': 'user',
+                'text': text
+            })
         }
-        text += ']'
-        if(text == '[]') return;
-        memory.push({
-            'role': 'user',
-            'text': text
-        })
         
         let messages = bot.config.startPrompt;
         memory.forEach(message => {
@@ -183,7 +179,7 @@ async function add(console, bot) {
             });
             tmpMessages.push({
                 'role': 'user',
-                'text': `[{"type":"event", "event_type":"answer_fail", "reason":"${sendResult.errorStr}"}]`
+                'text': `[Неправильный ответ]: ${sendResult.errorStr}`
             });
             sendResult = await bot.behaviors.eventPool.sendToGpt(tmpMessages)
             if(nTry > maxTries && !sendResult.status)
@@ -194,10 +190,17 @@ async function add(console, bot) {
             console.error('GPT Failed to answer');
             bot.chat('Sowwy! My gpt is faiwled ~')
         } else {
-            memory.push({role: 'assistant', text: JSON.stringify(sendResult.res)})
-            sendResult.res.forEach((command) => {
-                runCommand(command);
-            })
+            memory.push({role: 'assistant', text: (typeof sendResult.res == 'string') ? sendResult.res : JSON.stringify(sendResult.res)})
+            if(typeof sendResult.res != 'string') {
+                sendResult.res.forEach((command) => {
+                    runCommand(command);
+                })
+            }
+        }
+
+        if(bot.behaviors.eventPool.reRun) {
+            bot.behaviors.eventPool.reRun = false;
+            gptTask = bot.behaviors.eventPool.send()
         }
 
         bot.behaviors.eventPool.pending = false;

@@ -3,7 +3,7 @@ const fs = require('fs/promises');
 async function add(console, bot) {
 
     bot.once('spawn', async () => {
-        bot.behaviors.eventPool.addEvent({'event_type': 'bot_joined'})
+        bot.behaviors.eventPool.addEvent('Бот', `Ты зашёл на сервер`)
         
         console.log('Hello hello!')
     })

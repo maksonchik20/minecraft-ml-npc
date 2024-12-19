@@ -5,15 +5,12 @@ function createGoal(options) {
     const GOAL_DESTROY = -1;
 
     let goalPriority = {
-        follow: (bot, goal) => {
-            if(goal.lost)
-                return 5;
-            return 90;
-        },
-        look: (bot, goal) => {
-            if(goal.lost)
-                return GOAL_DESTROY;
-            return 40;
+        follow: {
+            priority: (bot, goal) => {
+                if(goal.lost)
+                    return 5;
+                return 90;
+            }
         },
         dig: (bot, goal) => {
             return 70
@@ -21,11 +18,6 @@ function createGoal(options) {
         defend: (bot, goal) => {
         },
         eat: (bot, goal) => {
-        },
-        handle_chat: (bot, goal) => {
-            if(goal.sent)
-                return -1;
-            return 95;
         }
     }
 
