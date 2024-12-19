@@ -33,7 +33,6 @@ async function craftItem(bot, item, amount) {
     const itemType = bot.registry.itemsByName[item]
     const recipe = Recipe.find(itemType.id)[0]
     if (recipe && item) {
-        // console.log(JSON.stringify(recipe, null, 2))
         if (recipe.requiresTable) {
             const craftingTableID = bot.registry.blocksByName.crafting_table.id
             const craftingTable = bot.findBlock({
@@ -45,7 +44,6 @@ async function craftItem(bot, item, amount) {
             }
             else {
                 bot.pathfinder.setMovements(new Movements(bot))
-                // await bot.pathfinder.setGoal(new goals.GoalNear(craftingTable.position.x, craftingTable.position.y, craftingTable.position.z, 3))
                 await bot.pathfinder.goto(new goals.GoalNear(craftingTable.position.x, craftingTable.position.y, craftingTable.position.z, 3))
                 try {
                     await bot.craft(recipe, amount, craftingTable)
@@ -84,6 +82,14 @@ function add(console, bot) {
         await bot.waitForChunksToLoad()
         bot.loadPlugin(collectBlock)
         bot.loadPlugin(autotool)
+        let messages = [
+            {
+                role: 'system',
+                text: bot.config.startPrompt
+            }
+        ]
+        let res = await bot.behaviors.gpt.ask(messages);
+        bot.chat(res.result.alternatives[0].message.text)
         bot.chat('Hi everyone, ready to work!')
         // console.log(JSON.stringify(Recipe.find(5)[0],null,2))
         collectBlocks(bot, "grass_block", 4, 'dirt')

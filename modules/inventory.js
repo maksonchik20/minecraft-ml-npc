@@ -24,7 +24,7 @@ async function unequipItem (bot, destination) {
 
 async function equipItem (bot, name, destination) {
     console.log(name, destination)
-    const item = itemByName(bot, name)
+    const item = botItemByName(bot, name)
     if (item) {
         try {
             await bot.equip(item, destination)
@@ -39,7 +39,7 @@ async function equipItem (bot, name, destination) {
 
 async function tossItem (bot, name, amount) {
     amount = parseInt(amount, 10)
-    const item = itemByName(bot, name)
+    const item = botItemByName(bot, name)
     if (!item) {
         bot.chat(`I have no ${name}`)
     } else {
@@ -66,7 +66,7 @@ function itemToString (item) {
     }
 }
 
-function itemByName (bot, name) {
+function botItemByName (bot, name) {
     const items = bot.inventory.items()
     if (bot.registry.isNewerOrEqualTo('1.9') && bot.inventory.slots[45]) items.push(bot.inventory.slots[45])
     return items.filter(item => item.name === name)[0]
@@ -76,5 +76,6 @@ module.exports = {
     sayItems: sayItems,
     equipItem: equipItem,
     unequipItem: unequipItem,
-    tossItem: tossItem
+    tossItem: tossItem,
+    itemToString: itemToString,
 }
