@@ -21,7 +21,7 @@ async function add(console, bot) {
     
     bot.behaviors.eventPool.addEvent = (event_type, event) => {
         idleCycles = maxIdleCycles;
-        bot.behaviors.eventPool.pool.push(`[${event_type}]: ${event}`)
+        bot.behaviors.eventPool.pool.push(`[${event_type}] ${event}`)
     }
 
     let memory = []
@@ -37,68 +37,89 @@ async function add(console, bot) {
         bot.behaviors.eventPool.addEvent(`Чат`, `Игрок "${username}" отправил сообщение "${message}"`);
     })
 
-    let gptAnswer = ajv.compile({
-        type: 'array',
-        items: {
-            type: 'object',
-            properties: {
-                command_type: {type: 'string'}
-            },
-            required: ['command_type']
-        }
-    })
-
-    let commandSchemas = {
-        'follow': ajv.compile({
-            type: "object",
-            properties: {
-                command_type: {type: "string", pattern: "^follow$"},
-                player_name: {type: "string"}
-            },
-            additionalProperties: false,
-            required: ["command_type", "player_name"]
-        }),
-        'stop_follow': ajv.compile({
-            type: "object",
-            properties: {
-                command_type: {type: "string", pattern: "^stop_follow$"},
-                player_name: {type: "string"}
-            },
-            additionalProperties: false,
-            required: ["command_type", "player_name"]
-        }),
-        'chat': ajv.compile({
-            type: "object",
-            properties: {
-                command_type: {type: "string", pattern: "^chat$"},
-                message: {type: "string", minLength: 1}
-            },
-            additionalProperties: false,
-            required: ["command_type", "message"]
+    let gptAnswer = (text='') => {
+        let lines = text.split('\n');
+        lines.forEach((text) => {
+            if((!(/^\[([A-Za-z0-9_]+)\] .+$/.test(text.trim()))) && (!(/^\[([A-Za-z0-9_]+)\]$/.test(text.trim())))) {
+                throw new Error('Неправильный формат ответа');
+            }
         })
     }
 
-    function validateCommand(obj) {
-        if(commandSchemas[obj.command_type] == undefined) {
-            throw new Error(`Команды "${obj.command_type}" не существует, попробуй ещё раз`)
-        }
-        result = commandSchemas[obj.command_type](obj)
-        if(!result) {
-            throw new Error(`Команда "${obj.command_type}" в неправильном формате, попробуй ещё раз`)
+    let commandSchemas = {
+        'FOLLOW': {
+            validator: (text='') => {
+                if(text.split(/[\t\n\r ]+/).length != 2)
+                    return false;
+                return true;
+            },
+            execute: (args) => {
+                console.log(`Follow not supported yet!`)
+                bot.behaviors.eventPool.addEvent('Команда', '"FOLLOW" успешно выполнена, это результат выполнения команды, не обращай внимание');
+            }
+        },
+        'STOP_FOLLOW': {
+            validator: (text='') => {
+                if(text.split(/[\t\n\r ]+/).length != 2)
+                    return false;
+                return true;
+            },
+            execute: (args) => {
+                console.log(`Stop_follow not supported yet!`)
+                bot.behaviors.eventPool.addEvent('Команда', '"STOP_FOLLOW" успешно выполнена, это результат выполнения команды, не обращай внимание');
+            }
+        },
+        'CHAT': {
+            validator: (text='') => {
+                if(text.split(/[\t\n\r ]+/).length < 2)
+                    return false;
+                return true;
+            },
+            execute: (text) => {
+                bot.chat(text)
+                bot.behaviors.eventPool.addEvent('Команда', '"CHAT" успешно выполнена, это результат выполнения команды, не обращай внимание');
+            }
+        },
+        'REASONING': {
+            validator: (text='') => {
+                if(text.split(/[\t\n\r ]+/).length < 2)
+                    return false;
+                return true;
+            },
+            execute: () => {
+                bot.behaviors.eventPool.reRun = true;
+            }
+        },
+        'STOP': {
+            validator: (text='') => {
+                return true;
+            },
+            execute: () => {
+                bot.behaviors.eventPool.reRun = false;
+                // stop!
+            }
         }
     }
 
-    function runCommand(obj) {
-        switch (obj.command_type) {
-            case 'chat':
-                bot.chat(obj.message)
-                bot.behaviors.eventPool.addEvent('Команда', '"chat" успешно выполнена, это результат выполнения команды, не обращай внимание');
-                break;
-            default:
-                bot.behaviors.eventPool.addEvent('Команда', `"${obj.command_type}" успешно выполнена, это результат выполнения команды, не обращай внимание`);
-                console.log(`Not supported yet ${obj.command_type}`)
-                break;
+    function validateCommand(text) {
+        let command_type = /^\[([A-Za-z0-9_]+)\].*$/.exec(text.trim())
+        if(command_type.length < 2)
+            throw new Error(`Команда "${obj.command_type}" в неправильном формате, попробуй ещё раз`)
+        command_type = command_type[1];
+        if(commandSchemas[command_type] == undefined) {
+            throw new Error(`Команды "${command_type}" не существует, попробуй ещё раз`)
         }
+        result = commandSchemas[command_type].validator(text.trim())
+        if(!result) {
+            throw new Error(`Команда "${command_type}" в неправильном формате, попробуй ещё раз`)
+        }
+    }
+
+    function runCommand(text) {
+        let command_type = /^\[([A-Za-z0-9_]+)\](.*)$/.exec(text.trim())
+        let commandArgs = command_type.length > 1 ? command_type[2].trim() : undefined;
+        command_type = command_type[1];
+        commandSchemas[command_type].execute(commandArgs)
     }
 
     bot.behaviors.eventPool.sendToGpt = async (messages) => {
@@ -110,34 +131,20 @@ async function add(console, bot) {
             res = res.substring(0, res.length - 3);
         }
 
-        if(res.startsWith('[REASONING]')) {
-            bot.behaviors.eventPool.reRun = true;
-            return {res: res, status: true};
-        }
-
         try {
+            gptAnswer(res)
 
-            let json = undefined;
+            let cmds = res.split('\n');
 
-            try {
-                json = JSON.parse(res);
-            } catch {
-                throw new Error('Формат ответа должен быть json, попробуй ещё раз')
-            }
-
-            if(!gptAnswer(json)) {
-                throw new Error('Ты используешь неправильный формат ответа, попробуй ещё раз')
-            }
-
-            if(json != undefined) {
-                json.forEach((command) => {
-                    validateCommand(command);
+            if(res != undefined) {
+                cmds.forEach((cmd) => {
+                    validateCommand(cmd)
                 })
             } else {
                 throw new Error('Ты используешь неправильный формат ответа, попробуй ещё раз')
             }
 
-            return {res: json, status: true};
+            return {res: res, status: true};
         } catch(e) {
             console.error(e);
             return {res: res, status: false, errorStr: e};
@@ -191,11 +198,10 @@ async function add(console, bot) {
             bot.chat('Sowwy! My gpt is faiwled ~')
         } else {
             memory.push({role: 'assistant', text: (typeof sendResult.res == 'string') ? sendResult.res : JSON.stringify(sendResult.res)})
-            if(typeof sendResult.res != 'string') {
-                sendResult.res.forEach((command) => {
-                    runCommand(command);
-                })
-            }
+            commands = sendResult.res.split('\n');
+            commands.forEach((cmd) => {
+                runCommand(cmd)
+            })
         }
 
         if(bot.behaviors.eventPool.reRun) {

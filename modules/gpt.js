@@ -21,7 +21,7 @@ function add(console, bot) {
 
     bot.behaviors.gpt.ask = async (messages) => {
         let data = {}
-        data['modelUri'] = 'gpt://b1glpqm6du4km50rq59p/yandexgpt/latest'
+        data['modelUri'] = 'gpt://b1glpqm6du4km50rq59p/yandexgpt-32k/latest'
         data['completionOptions'] = {'stream': false,
             'temperature': 0.3,
             'maxTokens': 1000}
