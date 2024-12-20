@@ -1,6 +1,6 @@
-const {tossItem} = require("../../modules/inventory");
-const collectBlock = require('mineflayer-collectblock').plugin
-const autotool = require('mineflayer-tool').plugin
+const {tossItem} = require("./inventory");
+// const collectBlock = require('mineflayer-collectblock').plugin
+// const autotool = require('mineflayer-tool').plugin
 const Recipe = require('prismarine-recipe')("1.20.1").Recipe
 const { Movements, goals } = require('mineflayer-pathfinder')
 
@@ -75,37 +75,38 @@ async function craftItem(bot, item, amount) {
 }
 
 
-function add(console, bot) {
-    // mcData = require('minecraft-data')(bot.version)
+// function add(console, bot) {
+//
+//     bot.on('spawn', async () => {
+//         await bot.waitForChunksToLoad()
+//         bot.loadPlugin(collectBlock)
+//         bot.loadPlugin(autotool)
+//         let messages = [
+//             {
+//                 role: 'system',
+//                 text: bot.config.startPrompt
+//             }
+//         ]
+//         let res = await bot.behaviors.gpt.ask(messages);
+//         bot.chat(res.result.alternatives[0].message.text)
+//         bot.chat('Hi everyone, ready to work!')
+//         collectBlocks(bot, "grass_block", 4, 'dirt')
+//     })
+//
+//     bot.on('chat', (username, message) => {
+//         command = message.split(' ')
+//         if (command[0] === 'collect') {
+//             // example: collect 10 grass_block
+//             collectBlocks(bot, command[2], command[1], command[3])
+//         }
+//         if (command[0] === 'craft') {
+//             // example: craft 1 crafting_table
+//             craftItem(bot, command[2], command[1])
+//         }
+//     })
+// }
 
-    bot.on('spawn', async () => {
-        await bot.waitForChunksToLoad()
-        bot.loadPlugin(collectBlock)
-        bot.loadPlugin(autotool)
-        let messages = [
-            {
-                role: 'system',
-                text: bot.config.startPrompt
-            }
-        ]
-        let res = await bot.behaviors.gpt.ask(messages);
-        bot.chat(res.result.alternatives[0].message.text)
-        bot.chat('Hi everyone, ready to work!')
-        // console.log(JSON.stringify(Recipe.find(5)[0],null,2))
-        collectBlocks(bot, "grass_block", 4, 'dirt')
-    })
-
-    bot.on('chat', (username, message) => {
-        command = message.split(' ')
-        if (command[0] === 'collect') {
-            // example: collect 10 grass_block
-            collectBlocks(bot, command[2], command[1], command[3])
-        }
-        if (command[0] === 'craft') {
-            // example: craft 1 crafting_table
-            craftItem(bot, command[2], command[1])
-        }
-    })
+module.exports = {
+    collectBlocks: collectBlocks,
+    craftItem: craftItem
 }
-
-module.exports = add
