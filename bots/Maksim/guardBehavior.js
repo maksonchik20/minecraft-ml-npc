@@ -21,14 +21,13 @@ function add(console, bot) {
         if (bot.protect_player) {
             filter = (entity) => {
                 return entity.type == 'hostile' &&
-                entity.position.distanceTo(bot.players['maksonchik20'].entity.position) < 16 &&
+                entity.position.distanceTo(bot.players[bot.protect_player].entity.position) < 16 &&
                 entity.displayName !== 'Armor Stand'
             }
         } else {
-            // todo: искать близжайшего к bot.protect_player (хранить тут player).
             filter = (entity) => {
                 return entity.type == 'hostile' &&
-                entity.position.distanceTo(bot.players['maksonchik20'].entity.position) < 16 &&
+                entity.position.distanceTo(bot.entity.position) < 16 &&
                 entity.displayName !== 'Armor Stand'
             }
         }
@@ -44,17 +43,16 @@ function add(console, bot) {
         
         if (message === 'guard') {
             const player = bot.players[username]
-
             if (!player) {
                 bot.chat("I can't see you.")
                 return
             }
             if (bot.behaviors.follow.target != null) {
                 bot.chat('I will protect you.')
-                guardArea(bot, player.entity.position, true)
+                guardArea(bot, username, true)
             } else {
                 bot.chat('I will guard that location.')
-                guardArea(bot, player.entity.position, false)
+                guardArea(bot, username, false)
             }
         }
 
