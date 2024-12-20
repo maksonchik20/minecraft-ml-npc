@@ -1,74 +1,94 @@
-function createGoal(options) {
+const GOAL_DESTROY = -1;
 
-    global.goalLastID = 0;
+function createGoal(bot, options) {
 
-    const GOAL_DESTROY = -1;
-
-    let goalPriority = {
-        follow: {
+    let goalsTypes = {
+        follow: require('./goals/follow'),
+        dig: {
+            paused: true,
             priority: (bot, goal) => {
-                if(goal.lost)
-                    return 5;
-                return 90;
+                return 40
+            },
+            execute: (bot, goal) => {
+                if(!goal.paused) return;
+                goal.paused = false;
+            },
+            pause: (bot, goal) => {
+                if(goal.paused) return;
+                goal.paused = true;
             }
-        },
-        dig: (bot, goal) => {
-            return 70
-        },
-        defend: (bot, goal) => {
-        },
-        eat: (bot, goal) => {
-        }
+        },  
+        defend: {
+            paused: true,
+            priority: (bot, goal) => {
+                return 70;
+            },
+            execute: (bot, goal) => {
+                if(!goal.paused) return;
+                goal.paused = false;
+            },
+            pause: (bot, goal) => {
+                if(goal.paused) return;
+                goal.paused = true;
+            }
+        },  
+        eat: {
+            paused: true,
+            priority: (bot, goal) => {
+                return 50;
+            },
+            execute: (bot, goal) => {
+                if(!goal.paused) return;
+                goal.paused = false;
+            },
+            pause: (bot, goal) => {
+                if(goal.paused) return;
+                goal.paused = true;
+            }
+        },  
+        complex: require('./goals/complex'),
+        idle: require('./goals/idle')
     }
 
     if(!options)
         throw new Error(`options is empty!`);
     goal = {}
+    if(goalsTypes[options.type]) {
+        goal = goalsTypes[options.type]
+        goal.type = options.type
+    }
     goal.id = global.goalLastID;
     global.goalLastID++;
-    goal.type = options.type;
-    if(goalPriority[type]) {
-        goal.priority = goalPriority[type]
-    }
-    switch (type) {
+    switch (options.type) {
         case 'follow':
-            if(!options.player)
+            if(!options.target)
                 throw new Error(`Player is required for follow goal`)
-            goal.player = options.player
-            goal.lost = (options.player.entity) ? false : true
+            goal.target = options.target
+            goal.lost = (goal.target.notReal != undefined) ? true : false
             bot.on('entityGone', (entity) => {
-                if(entity.username == goal.player.username) {
+                if(entity.username == goal.target.username) {
                     goal.lost = true;
                 }
             })
             bot.on('entitySpawn', (entity) => {
-                if(entity.username == goal.player.username) {
+                if(entity.username == goal.target.username) {
                     goal.lost = false;
                 }
             })
-            return goal;
-        case 'look':
-            if(!options.target)
-                throw new Error(`Target is required for look goal`)
-            goal.target = options.target
-            goal.on()
             return goal;
         case 'dig':
             if(!options.targetBlocks)
                 throw new Error(`Target Blocks is required for dig goal`)
             goal.targetBlocks = options.targetBlocks
             return goal
-        case 'goto':
-            break;
+        case 'idle':
+            return goal;
         case 'complex':
-            if(!options.priority) {
-                options.priority = (bot, goal) => {
-                    return 50;
-                }
+            if(options.priority) {
+                goal.priority = options.priority
             }
             if(!options.goals)
                 throw new Error(`Complex goal need goals to perform`)
-            goal.priority = options.priority
             goal.goals = options.goals
             return goal;
         default:
@@ -76,3 +96,4 @@ function createGoal(options) {
     }
 }
 
+module.exports = { createGoal, GOAL_DESTROY }

@@ -1,9 +1,6 @@
-const Ajv = require("ajv")
-const fs = require('fs/promises')
+const fs = require('fs/promises');
 
 async function add(console, bot) {
-
-    const ajv = new Ajv();
 
     let gptTask = new Promise((resolve) => {
         resolve('');
@@ -15,13 +12,14 @@ async function add(console, bot) {
     bot.behaviors.eventPool = {}
     
     bot.behaviors.eventPool.pending = false;
-    
+    let pool = []
     bot.behaviors.eventPool.pool = []
     bot.behaviors.eventPool.reRun = false;
     
     bot.behaviors.eventPool.addEvent = (event_type, event) => {
         idleCycles = maxIdleCycles;
-        bot.behaviors.eventPool.pool.push(`[${event_type}] ${event}`)
+        let newStr = `[${event_type}] ${event}`;
+        bot.behaviors.eventPool.pool.push(newStr)
     }
 
     let memory = []
@@ -30,11 +28,6 @@ async function add(console, bot) {
     bot.on('end', async () => {
         bot.behaviors.eventPool.addEvent('Бот', 'Ты покинул игру')
         await fs.writeFile('./bots/Cyn/memory/history.json', JSON.stringify({messages: memory}, null, 4));
-    })
-
-    bot.on('chat', (username, message) => {
-        if(username == bot.username) return;
-        bot.behaviors.eventPool.addEvent(`Чат`, `Игрок "${username}" отправил сообщение "${message}"`);
     })
 
     let gptAnswer = (text='') => {
@@ -47,47 +40,17 @@ async function add(console, bot) {
     }
 
     let commandSchemas = {
-        'FOLLOW': {
-            validator: (text='') => {
-                if(text.split(/[\t\n\r ]+/).length != 2)
-                    return false;
-                return true;
-            },
-            execute: (args) => {
-                console.log(`Follow not supported yet!`)
-                bot.behaviors.eventPool.addEvent('Команда', '"FOLLOW" успешно выполнена, это результат выполнения команды, не обращай внимание');
-            }
-        },
-        'STOP_FOLLOW': {
-            validator: (text='') => {
-                if(text.split(/[\t\n\r ]+/).length != 2)
-                    return false;
-                return true;
-            },
-            execute: (args) => {
-                console.log(`Stop_follow not supported yet!`)
-                bot.behaviors.eventPool.addEvent('Команда', '"STOP_FOLLOW" успешно выполнена, это результат выполнения команды, не обращай внимание');
-            }
-        },
-        'CHAT': {
-            validator: (text='') => {
-                if(text.split(/[\t\n\r ]+/).length < 2)
-                    return false;
-                return true;
-            },
-            execute: (text) => {
-                bot.chat(text)
-                bot.behaviors.eventPool.addEvent('Команда', '"CHAT" успешно выполнена, это результат выполнения команды, не обращай внимание');
-            }
-        },
+        'FOLLOW': require('./commands/FOLLOW'),
+        'STOP_FOLLOW': require('./commands/STOP_FOLLOW'),
+        'CHAT': require('./commands/CHAT'),
         'REASONING': {
             validator: (text='') => {
-                if(text.split(/[\t\n\r ]+/).length < 2)
+                if(text.split(/[\t\n\r ]/).length < 2)
                     return false;
                 return true;
             },
             execute: () => {
-                bot.behaviors.eventPool.reRun = true;
+                // reason!
             }
         },
         'STOP': {
@@ -95,7 +58,6 @@ async function add(console, bot) {
                 return true;
             },
             execute: () => {
-                bot.behaviors.eventPool.reRun = false;
                 // stop!
             }
         }
@@ -119,7 +81,7 @@ async function add(console, bot) {
         let command_type = /^\[([A-Za-z0-9_]+)\](.*)$/.exec(text.trim())
         let commandArgs = command_type.length > 1 ? command_type[2].trim() : undefined;
         command_type = command_type[1];
-        commandSchemas[command_type].execute(commandArgs)
+        commandSchemas[command_type].execute(bot, commandArgs)
     }
 
     bot.behaviors.eventPool.sendToGpt = async (messages) => {
@@ -217,6 +179,7 @@ async function add(console, bot) {
             idleCycles--;
         }
         if(idleCycles == 0 && bot.behaviors.eventPool.pool.length != 0 && !bot.behaviors.eventPool.pending) {
+            console.log(`pool status: ${JSON.stringify(bot.behaviors.eventPool.pool)}`)
             gptTask = bot.behaviors.eventPool.send()
         }
     }, 50)
