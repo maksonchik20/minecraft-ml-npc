@@ -102,5 +102,6 @@ module.exports = {
     attackPlayer: attackPlayer,
     attackEntity: attackEntity,
     createConsole: createConsole,
-    isEntityLookingAtBot: isEntityLookingAtBot
+    isEntityLookingAtBot: isEntityLookingAtBot,
+    sleep: sleep
 }

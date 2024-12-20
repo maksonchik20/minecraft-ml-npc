@@ -1,8 +1,6 @@
 const { isEntityLookingAtBot } = require("../../modules/functions");
 
-
 function add(console, bot) {
-    bot.removeAllListeners('chat');
 
     let cyclePoll = undefined;
 
@@ -36,9 +34,38 @@ function add(console, bot) {
             cycles: defaultInterest,
             entity: entity
         })
+        switch (entity.type) {
+            case 'player':
+                bot.behaviors.eventPool.addEvent('Сущность', `Игрок "${entity.username}" смотрит на бота или назвал его имя`);
+                break;
+            case 'animal':
+                bot.behaviors.eventPool.addEvent('Сущность', `Животное "${entity.name}" смотрит на бота`);
+                break;
+            case 'hostile':
+                bot.behaviors.eventPool.addEvent('Сущность', `Враждебная сущность "${entity.name}" смотрит на бота`);
+                break;
+            default:
+                bot.behaviors.eventPool.addEvent('Сущность', `Cущность "${entity.name}" смотрит на бота`);
+                break;
+        }
+        
     }
 
     function removeInterest(entity) {
+        switch (entity.type) {
+            case 'player':
+                bot.behaviors.eventPool.addEvent('Сущность', `Игрок "${entity.username}" больше не смотрит на бота или больше не говорит про него`);
+                break;
+            case 'animal':
+                bot.behaviors.eventPool.addEvent('Сущность', `Животное "${entity.name}" больше не смотрит на бота`);
+                break;
+            case 'hostile':
+                bot.behaviors.eventPool.addEvent('Сущность', `Враждебная сущность "${entity.name}" больше не смотрит на бота`);
+                break;
+            default:
+                bot.behaviors.eventPool.addEvent('Сущность', `Cущность "${entity.name}" больше не смотрит на бота`);
+                break;
+        }
         console.log('Entity no longer interest in me!')
         interestedEntities = interestedEntities.filter((interest) => {
             return !(interest.entity == entity || interest.entity.username == entity.username)
@@ -53,6 +80,9 @@ function add(console, bot) {
             }, 100)
         }
     }
+
+    bot.behaviors.interest = {}
+    bot.behaviors.interest.isEntityIntrested = isEntityIntrested
 
     bot.behaviors.looking.preferSelectingFuncs.push(() => {
         let preffered = null;
@@ -71,7 +101,7 @@ function add(console, bot) {
                     preffered = value.entity;
                     prefferedCycles = value.cycles
                     return;
-                } else if (value.cycles > preffered.cycles){
+                } else if (value.cycles > prefferedCycles){
                     preffered = value.entity;
                     prefferedCycles = value.cycles
                     return;
@@ -86,31 +116,12 @@ function add(console, bot) {
         }
     })
 
-    bot.on('chat', (username, message) => {
-        if (message.includes(bot.username) && bot.players[username].entity) {
-            setTimeout(() => {
-                addInterest(bot.players[username].entity)
-            }, Math.random() * 100)
-        }
-        if (message.includes('come with me') && (message.includes(bot.username) || isEntityIntrested(bot.players[username].entity))) {
-            console.log('start following ' + username)
-            bot.chat('Following you!');
-            let target = bot.players[username]?.entity
-            if(target !== undefined) {
-                bot.behaviors.follow.startFollowing(target)
-            }
-        }
-        if (message.includes('stop following') && (message.includes(bot.username) || isEntityIntrested(bot.players[username].entity))) {
-            console.log('stop following')
-            bot.chat('Ok!');
-            bot.behaviors.follow.stopFollowing()
-        }
-    })
-
     cyclePoll = setInterval(() => {
         let toPop = []
         interestedEntities.forEach((interest) => {
             interest.cycles--;
+            if(bot.behaviors.follow.isFollowingEntity(interest.entity))
+                interest.cycles = defaultInterest;
             if(interest.cycles == 0)
                 toPop.push(interest.entity)
         })
