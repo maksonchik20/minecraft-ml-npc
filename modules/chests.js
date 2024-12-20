@@ -1,37 +1,37 @@
 const mineflayer = require('mineflayer')
-const { itemToString, sayItems } = require('../../modules/inventory')
+const { itemToString, sayItems } = require('./inventory')
 // const {} = require("../../modules/inventory");
 
-function add(console, bot) {
-    bot.on('experience', () => {
-        bot.chat(`I am level ${bot.experience.level}`)
-    })
-
-    bot.on('chat', (username, message) => {
-        if (username === bot.username) return;
-        switch (true) {
-            case /^chest$/.test(message):
-                watchChest(bot, false, ['chest', 'ender_chest', 'trapped_chest'])
-                bot.chat('Trying...')
-                break
-            case /^list$/.test(message):
-                sayItems(bot)
-                break
-            case /^furnace$/.test(message):
-                watchFurnace(bot)
-                break
-            case /^chestminecart$/.test(message):
-                watchChest(bot, true)
-                break
-            case /^dispenser$/.test(message):
-                watchChest(bot, false, ['dispenser'])
-                break
-            case /^enchant$/.test(message):
-                watchEnchantmentTable(bot)
-                break
-        }
-    })
-}
+// function add(console, bot) {
+//     bot.on('experience', () => {
+//         bot.chat(`I am level ${bot.experience.level}`)
+//     })
+//
+//     bot.on('chat', (username, message) => {
+//         if (username === bot.username) return;
+//         switch (true) {
+//             case /^chest$/.test(message):
+//                 watchChest(bot, false, ['chest', 'ender_chest', 'trapped_chest'])
+//                 bot.chat('Trying...')
+//                 break
+//             case /^list$/.test(message):
+//                 sayItems(bot)
+//                 break
+//             case /^furnace$/.test(message):
+//                 watchFurnace(bot)
+//                 break
+//             case /^chestminecart$/.test(message):
+//                 watchChest(bot, true)
+//                 break
+//             case /^dispenser$/.test(message):
+//                 watchChest(bot, false, ['dispenser'])
+//                 break
+//             case /^enchant$/.test(message):
+//                 watchEnchantmentTable(bot)
+//                 break
+//         }
+//     })
+// }
 
 async function watchChest(bot, minecart, blocks=[]) {
     let chestToOpen
@@ -136,11 +136,11 @@ async function watchFurnace(bot) {
     output += `Output: ${itemToString(furnace.outputItem())}`
     bot.chat(output)
 
-    furnace.on(`updateSlot`, (slot, oldItem, newItem) => {
-        if (slot === 2 && itemToString(newItem) !== 'nothing') {
-        }
-        bot.chat(`Furnace update: ${itemToString(oldItem)} -> ${itemToString(newItem)} (slot: ${slot})`)
-    })
+    // furnace.on(`updateSlot`, (slot, oldItem, newItem) => {
+    //     if (slot === 2 && itemToString(newItem) !== 'nothing') {
+    //     }
+    //     bot.chat(`Furnace update: ${itemToString(oldItem)} -> ${itemToString(newItem)} (slot: ${slot})`)
+    // })
 
     furnace.on(`close`, () => {
         bot.chat(`Furnace closed`)
@@ -223,9 +223,10 @@ async function watchEnchantmentTable (bot) {
     const table = await bot.openEnchantmentTable(enchantTableBlock)
     bot.chat(itemToString(table.targetItem()))
 
-    table.on('updateSlot', (slot, oldItem, newItem) => {
-        bot.chat(`enchantment table update: ${itemToString(oldItem)} -> ${itemToString(newItem)} (slot: ${slot})`)
-    })
+    // table.on('updateSlot', (slot, oldItem, newItem) => {
+    //     bot.chat(`enchantment table update: ${itemToString(oldItem)} -> ${itemToString(newItem)} (slot: ${slot})`)
+    // })
+
     table.on('close', () => {
         bot.chat('enchantment table closed')
     })
@@ -242,7 +243,6 @@ async function watchEnchantmentTable (bot) {
         switch (true) {
             case /^close$/.test(message):
                 closeEnchantmentTable()
-
                 break
             case /^put \w+$/.test(message):
                 // put name
@@ -282,10 +282,7 @@ async function watchEnchantmentTable (bot) {
         }
 
         async function addLapis () {
-            const item1 = itemByType(table.items(), ['dye', 'purple_dye', 'lapis_lazuli'])
-            console.log(item1)
-            const item = itemByType(table.items(), ['dye', 'purple_dye', 'lapis_lazuli'].filter(name => bot.registry.itemByName[name] !== undefined)
-            .map(name => bot.registry.itemByName[name].id))
+            const item = itemByName(table.items(), "lapis_lazuli")
             if (item) {
                 try {
                     await table.putLapis(item)
@@ -339,4 +336,8 @@ function itemByName (items, name) {
     return null
 }
 
-module.exports = add
+module.exports = {
+    watchChest: watchChest,
+    watchFurnace: watchFurnace,
+    watchEnchantmentTable: watchEnchantmentTable
+}
