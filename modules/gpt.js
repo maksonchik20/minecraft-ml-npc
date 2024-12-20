@@ -23,7 +23,7 @@ function add(console, bot) {
         let data = {}
         data['modelUri'] = 'gpt://b1glpqm6du4km50rq59p/yandexgpt-32k/latest'
         data['completionOptions'] = {'stream': false,
-            'temperature': 0.3,
+            'temperature': 0,
             'maxTokens': 1000}
         data['messages'] = messages
         let responce = await fetch(url, {
