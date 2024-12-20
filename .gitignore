@@ -1,14 +1,7 @@
 venv
 logs
 .env
-node_modules/*
-!node_modules/mineflayer
-node_modules/mineflayer/*
-!node_modules/mineflayer/lib
-node_modules/mineflayer/lib/*
-!node_modules/mineflayer/lib/plugins
-node_modules/mineflayer/lib/plugins/*
-!node_modules/mineflayer/lib/plugins/physics.js
+node_modules
 server/cache
 server/config
 server/libraries
