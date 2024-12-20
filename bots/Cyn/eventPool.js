@@ -1,6 +1,4 @@
 const fs = require('fs/promises');
-const { sleep } = require("../../modules/functions");
-const { createGoal } = require("./goals");
 
 async function add(console, bot) {
 
@@ -42,101 +40,9 @@ async function add(console, bot) {
     }
 
     let commandSchemas = {
-        'FOLLOW': {
-            validator: (text='') => {
-                if(text.split(/[\t\n\r ]/).length != 2)
-                    return false;
-                return true;
-            },
-            execute: (args) => {
-                console.log('Player to follow ' + args)
-                if(bot.players[args] == undefined || bot.players[args] == null) {
-                    bot.behaviors.eventPool.addEvent('Команда', `"FOLLOW" не выполнена. Игрок "${args}" не найден`);
-                    return;
-                }
-                let entity = bot.players[args].entity
-                if(bot.players[args].entity == null) {
-                    console.log('Player ' + args + ' is too far!');
-                    entity = {
-                        position: bot.player.entity.position,
-                        username: args,
-                        notReal: true
-                    }
-                }
-                console.log('creating goal!')
-                bot.behaviors.goals.goal.goals.push(createGoal(bot, {
-                    type: 'follow',
-                    target: entity
-                }))
-                console.log('adding callback event!');
-                bot.behaviors.eventPool.addEvent('Команда', '"FOLLOW" успешно выполнена');
-            }
-        },
-        'STOP_FOLLOW': {
-            validator: (text='') => {
-                if(text.split(/[\t\n\r ]/).length != 2)
-                    return false;
-                return true;
-            },
-            execute: (args) => {
-                let goalsToStop = bot.behaviors.goals.goal.goals.filter((_goal) => {
-                    return _goal.type == 'follow' && _goal.target.username == args
-                })
-                if(goalsToStop.length == 0) {
-                    bot.behaviors.eventPool.addEvent('Команда', `"STOP_FOLLOW" не выполнена. Бот сейчас не следует за игроком "${args}".`);
-                    return;
-                } 
-                goalsToStop.forEach((goal) => {
-                    bot.behaviors.goals.removeGoal(goal);
-                })
-                bot.behaviors.eventPool.addEvent('Команда', '"STOP_FOLLOW" успешно выполнена');
-            }
-        },
-        'CHAT': {
-            validator: (text='') => {
-                if(text.split(/[\t\n\r ]/).length < 2)
-                    return false;
-                return true;
-            },
-            execute: async (text) => {
-                let lines = text.split(/[\n]/)
-                let nlines = []
-                lines.forEach((line) => {
-                    let words = line.split(/[ ]/)
-                    let nline = ''
-                    words.forEach((word) => {
-                        if(nline.length + word.length + 1 < 250) {
-                            nline += ` ${word}`
-                        } else if(word.length > 250) {
-                            for(let i = 0; i<word.length; i += 250) {
-                                nline = word.substring(i, Math.min(i + 250, word.length))
-                                if(nline == 250) {
-                                    nlines.push(nline)
-                                    nline = ''
-                                }
-                            }
-                        } else {
-                            nlines.push(nlines)
-                            nline = word
-                        }
-                    })
-                    if(nline != '')
-                        nlines.push(nline)
-                })
-                let promises = []
-                let lst = 0
-                nlines.forEach((nline) => {
-                    let func = async () => {
-                        lst += 100 + Math.random() * 100
-                        await sleep(lst)
-                        bot.chat(nline)
-                    }
-                    promises.push(func())
-                })
-                await Promise.all(promises)
-                bot.behaviors.eventPool.addEvent('Команда', '"CHAT" успешно выполнена');
-            }
-        },
+        'FOLLOW': require('./commands/FOLLOW'),
+        'STOP_FOLLOW': require('./commands/STOP_FOLLOW'),
+        'CHAT': require('./commands/CHAT'),
         'REASONING': {
             validator: (text='') => {
                 if(text.split(/[\t\n\r ]/).length < 2)
@@ -175,7 +81,7 @@ async function add(console, bot) {
         let command_type = /^\[([A-Za-z0-9_]+)\](.*)$/.exec(text.trim())
         let commandArgs = command_type.length > 1 ? command_type[2].trim() : undefined;
         command_type = command_type[1];
-        commandSchemas[command_type].execute(commandArgs)
+        commandSchemas[command_type].execute(bot, commandArgs)
     }
 
     bot.behaviors.eventPool.sendToGpt = async (messages) => {
