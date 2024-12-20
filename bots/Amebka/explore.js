@@ -5,7 +5,7 @@ function get_random_int (max){
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
-async function show_location(bot)
+async function show_location(console, bot)
 {
     while (1)
     {
@@ -13,7 +13,7 @@ async function show_location(bot)
         await sleep(5000)
     }
 }
-async function go_to_random_point(bot, radius)
+async function go_to_random_point(console, bot, radius)
 {
     const pos = bot.entity.position
     const goal = new goals.GoalNearXZ(pos.x + get_random_int(radius), pos.z + get_random_int(radius), 5)
@@ -29,13 +29,16 @@ async function go_to_random_point(bot, radius)
     }
 
 }
-async function start_explore (bot)
+async function explore (console, bot)
 {
     const defaultMovements = new Movements(bot)
     bot.pathfinder.setMovements(defaultMovements)
-    show_location(bot)
+    show_location(console, bot)
     while (1)
-        await go_to_random_point(bot, 100)
+        await go_to_random_point(console, bot, 100)
 }
-
+async function start_explore(console, bot) 
+{
+    bot.once('spawn', () => {explore(console, bot)})
+}
 module.exports = start_explore;

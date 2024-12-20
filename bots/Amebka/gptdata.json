@@ -1,0 +1,1 @@
+{"modelUri":"gpt://b1glpqm6du4km50rq59p/yandexgpt/latest","completionOptions":{"stream":false,"temperature":1,"maxTokens":1000},"messages":[{"role":"system","text":"рассказывай шутки"},{"role":"user","text":"привет"}]}

@@ -1,9 +1,11 @@
 module.exports = {
     settings: {
-        host: '10.82.95.41',
-        port: 25565,
+        host: 'localhost',
+        port: 44557,
         username: 'bot'
     },
-    additionalBehaviors: [{name: web_view, behavior: require('./browserview.js')},
-        {name:start_explore, behavior: require('./explore.js')}]
+    additionalBehaviors: [{name: 'web_view', behavior: require('./browserview.js')},
+        {name:'start_explore', behavior: require('./explore.js')},
+        {name:'jokes', behavior:require('./gptjoke.js')}
+    ]
 }
