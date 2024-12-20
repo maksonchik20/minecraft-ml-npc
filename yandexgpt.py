@@ -18,32 +18,64 @@ data['completionOptions'] = {'stream': False,
 data['messages'] = [
     {
         "role": "system",
-        "text": """Ты являешь игроком в игру майнкрафт, который должен помогать игрокам. Будь доброжелательным"""
+        "text": """Ты являешь игроком в игру майнкрафт, который должен помогать игрокам. Будь доброжелательным. Можешь использовать несколько вызовов функций"""
     }, 
     {
         "role": "user",
-        "text": "Какая погода в Моске?"
-    }
+        "text": "Привет, приди ко мне. Защити меня от вражеских мобов"
+    },
+    {'role': 'assistant', 'toolCallList': {'toolCalls': [{'functionCall': {'name': 'come with me', 'arguments': {'bot_username': 'MinecraftHelperBot'}}}]}},
+    {
+        "role": "user",
+        "text": "Предыдущая функция вызвалась, вызови следующую"
+    },
+    {'role': 'assistant', 'toolCallList': {'toolCalls': [{'functionCall': {'name': 'guard_user', 'arguments': {}}}]}},
+    {
+        "role": "user",
+        "text": "Предыдущая функция вызвалась, вызови следующую"
+    },
 ]
 
-data['tools'] = []
-
-data['tools'].append({
+data['tools'] = [
+    {
         'function': {
-            'name': 'get_weather',
-            'description': 'с помощью данной функции можно узнать погоду в городе',
+        'name': 'come with me',
+        'description': 'Эта функцию запускает поведение начала хождения за пользователем',
+        'parameters': {
+            'type': 'object',
+            'properties': {
+                'bot_username': {
+                    'type': 'string',
+                    'description': 'Имя бота'
+                    }
+                },
+            "required": [
+                    "bot_username"
+                ]
+        }
+        }
+    },
+    {
+        'function': {
+            'name': 'guard_user',
+            'description': 'Эта функцию запускает поведение защиты игрока от вражеских мобов',
             'parameters': {
                 'type': 'object',
-                'properties': {
-                    'location': {
-                        'type': 'string',
-                        'description': 'Местоположение, например, название города'
-                    }
-                }
-            }
+                'properties': {}
+            },
+        }
+    },
+    {
+        'function': {
+            'name': 'guard_location',
+            'description': 'Эта функцию запускает поведение защиты локации от вражеских мобов',
+            'parameters': {
+                'type': 'object',
+                'properties': {}
+            },
         }
     }
-)
+]
 
 response = requests.post(url, headers={'Authorization': 'Bearer ' + token}, json = data).json()
 print(response)

@@ -16,13 +16,14 @@ async function goToSleep (bot) {
         bot.chat('No nearby bed')
     }
 }
-  async function wakeUp (bot) {
+
+async function wakeUp (bot) {
     try {
-      await bot.wake()
+        await bot.wake()
     } catch (err) {
-      bot.chat(`I can't wake up: ${err.message}`)
+        bot.chat(`I can't wake up: ${err.message}`)
     }
-  }
+}
 
 module.exports = {
     goToSleep: goToSleep,
