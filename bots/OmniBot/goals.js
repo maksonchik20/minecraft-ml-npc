@@ -47,7 +47,8 @@ function createGoal(bot, options) {
             }
         },  
         complex: require('./goals/complex'),
-        idle: require('./goals/idle')
+        idle: require('./goals/idle'),
+        explore:reqire('./goals/explore')
     }
 
     if(!options)

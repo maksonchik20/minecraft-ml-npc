@@ -8,7 +8,8 @@ module.exports = {
         {name: 'priorityGoals', behavior: require('./priorityGoals')},
         {name: 'eventPool', behavior: require('./eventPool')},
         {name: 'customInterest', behavior: require('./interest')},
-        {name: 'eventsListener', behavior: require('./events')}
+        {name: 'eventsListener', behavior: require('./events')},
+        {name: 'explore', behavior: require('./explore')}
     ],
     startPrompt: [
         {
@@ -20,6 +21,7 @@ module.exports = {
                 [FOLLOW] <Имя игрока> - чтобы начать идти за игроком\n \
                 [STOP_FOLLOW] <Имя игрока> - чтобы перестать идти за пользователем\n \
                 [CHAT] <Сообщение> - чтобы написать сообщение другим игрокам\n \
+                [GO_TO_RANDOM_POINT] <> - исследовать территорию\n \
                 Ты можешь использовать несколько или одну команду, используй \n \
                 Если считаешь, чтл ничего делать не нужно, ответь [STOP]\n \
                 Используй перед ответом [REASONING] чтобы объяснить своё следующее действие\n\n \
