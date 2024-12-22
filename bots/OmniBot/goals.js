@@ -92,6 +92,8 @@ function createGoal(bot, options) {
                 throw new Error(`Complex goal need goals to perform`)
             goal.goals = options.goals
             return goal;
+        case 'explore':
+            return goal
         default:
             throw new Error(`${type} type of goal is not supported`);
     }
