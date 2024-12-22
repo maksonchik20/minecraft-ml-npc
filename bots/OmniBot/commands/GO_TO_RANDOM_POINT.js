@@ -9,6 +9,6 @@ module.exports = {
         console.log('creating explore goal')
         bot.behaviors.goal.goals.goal.push(createGoal(bot, {type:'explore'}))
         console.log('adding callback event!')
-        bot.behaviors.eventPool.addEvent('Команда', '"GUARD_USER" успешно выполнена')
+        bot.behaviors.eventPool.addEvent('Команда', '"GO_TO_RANDOM_POINT" успешно выполнена')
     }
 }

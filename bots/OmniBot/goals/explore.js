@@ -1,4 +1,3 @@
-
 module.exports = {
     paused: true,
     priority: (bot, goal) => {
@@ -8,6 +7,10 @@ module.exports = {
         if(!goal.paused) return;
         goal.paused = false;
         bot.behaviors.explore.go_to_random_point(50);
+        this.priority = (bot, goal) => {
+            return -1;
+        }
+        this.priority.bind(this)
     },
     pause: (bot, goal) => {
         if(goal.paused) return;

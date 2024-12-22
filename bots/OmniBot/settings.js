@@ -6,12 +6,12 @@ module.exports = {
     },
     additionalBehaviors: [
         {name: 'createMemory', behavior: require('./modules/createMemory')},
-        {name:'browserview', behavior: require('./browserview')},
+        {name:'browserview', behavior: require('./modules/browserview')},
         {name: 'priorityGoals', behavior: require('./modules/priorityGoals')},
         {name: 'eventPool', behavior: require('./modules/eventPool')},
         {name: 'interest', behavior: require('./modules/interest')},
         {name: 'eventsListener', behavior: require('./modules/events')},
-        {name: 'explore', behavior: require('./explore')}
+        {name: 'explore', behavior: require('./modules/explore')}
     ],
     startPrompt: [
         {
