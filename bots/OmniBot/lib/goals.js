@@ -46,9 +46,10 @@ function createGoal(bot, options) {
                 goal.paused = true;
             }
         },  
-        complex: require('../goals/complex'),
+        complex: require('./goals/complex'),
         guard: require('../goals/guard'),
-        idle: require('../goals/idle')
+        explore:reqire('./goals/explore'),
+        idle: require('./goals/idle')
     }
 
     if(!options)
@@ -101,6 +102,8 @@ function createGoal(bot, options) {
                 throw new Error(`Complex goal need goals to perform`)
             goal.goals = options.goals
             return goal;
+        case 'explore':
+            return goal
         default:
             throw new Error(`${type} type of goal is not supported`);
     }

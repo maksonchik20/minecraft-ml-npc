@@ -6,10 +6,12 @@ module.exports = {
     },
     additionalBehaviors: [
         {name: 'createMemory', behavior: require('./modules/createMemory')},
+        {name:'browserview', behavior: require('./browserview')},
         {name: 'priorityGoals', behavior: require('./modules/priorityGoals')},
         {name: 'eventPool', behavior: require('./modules/eventPool')},
         {name: 'interest', behavior: require('./modules/interest')},
-        {name: 'eventsListener', behavior: require('./modules/events')}
+        {name: 'eventsListener', behavior: require('./modules/events')},
+        {name: 'explore', behavior: require('./explore')}
     ],
     startPrompt: [
         {
@@ -24,6 +26,7 @@ module.exports = {
                 [GUARD_USER] <Имя игрока> - защищать игрока от враждебных мобов\n \
                 [GUARD_LOCATION] <координаты, три числа или три "~"> - защищать координату в мире от враждебных мобов\n \
                 [STOP_GUARD] - перестать защищать что-либо\n \
+                [GO_TO_RANDOM_POINT] - исследовать территорию\n \
                 Ты можешь использовать несколько или одну команду, используй \n \
                 Если считаешь, чтл ничего делать не нужно, ответь [STOP]\n \
                 Используй перед ответом [REASONING] чтобы объяснить своё следующее действие\n\n \
