@@ -5,6 +5,7 @@ module.exports = {
         username: 'OmniBot'
     },
     additionalBehaviors: [
+        {name:'browserview', behavior: require('./browserview')},
         {name: 'priorityGoals', behavior: require('./priorityGoals')},
         {name: 'eventPool', behavior: require('./eventPool')},
         {name: 'customInterest', behavior: require('./interest')},
