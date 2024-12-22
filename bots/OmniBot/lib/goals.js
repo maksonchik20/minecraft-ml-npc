@@ -3,7 +3,7 @@ const GOAL_DESTROY = -1;
 function createGoal(bot, options) {
 
     let goalsTypes = {
-        follow: require('./goals/follow'),
+        follow: require('../goals/follow'),
         dig: {
             paused: true,
             priority: (bot, goal) => {
@@ -46,15 +46,16 @@ function createGoal(bot, options) {
                 goal.paused = true;
             }
         },  
-        complex: require('./goals/complex'),
-        idle: require('./goals/idle')
+        complex: require('../goals/complex'),
+        guard: require('../goals/guard'),
+        idle: require('../goals/idle')
     }
 
     if(!options)
         throw new Error(`options is empty!`);
     goal = {}
     if(goalsTypes[options.type]) {
-        goal = goalsTypes[options.type]
+        goal = Object.create(goalsTypes[options.type])
         goal.type = options.type
     }
     goal.id = global.goalLastID;
@@ -83,6 +84,15 @@ function createGoal(bot, options) {
             return goal
         case 'idle':
             return goal;
+        case 'guard':
+            if(!options.locked_position) {
+                goal.guard_target = options.guard_target
+                goal.locked_position = false
+            } else {
+                goal.position = options.position
+                goal.locked_position = true
+            }
+            return goal
         case 'complex':
             if(options.priority) {
                 goal.priority = options.priority

@@ -20,3 +20,4 @@ server/*.json
 server/*.yml
 server/.console_history
 bots/Cyn/memory/*.json
+bots/OmniBot/memory/*.json

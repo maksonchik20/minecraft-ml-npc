@@ -5,10 +5,11 @@ module.exports = {
         username: 'OmniBot'
     },
     additionalBehaviors: [
-        {name: 'priorityGoals', behavior: require('./priorityGoals')},
-        {name: 'eventPool', behavior: require('./eventPool')},
-        {name: 'customInterest', behavior: require('./interest')},
-        {name: 'eventsListener', behavior: require('./events')}
+        {name: 'createMemory', behavior: require('./modules/createMemory')},
+        {name: 'priorityGoals', behavior: require('./modules/priorityGoals')},
+        {name: 'eventPool', behavior: require('./modules/eventPool')},
+        {name: 'interest', behavior: require('./modules/interest')},
+        {name: 'eventsListener', behavior: require('./modules/events')}
     ],
     startPrompt: [
         {
@@ -18,8 +19,11 @@ module.exports = {
                 [<Тип события>] <Текст события>\n \
                 Для ответа ты можешь использовать ТОЛЬКО такие команды, которые выполняют некоторое действие:\n \
                 [FOLLOW] <Имя игрока> - чтобы начать идти за игроком\n \
-                [STOP_FOLLOW] <Имя игрока> - чтобы перестать идти за пользователем\n \
+                [STOP_FOLLOW] <Имя игрока> - чтобы перестать идти за игроком\n \
                 [CHAT] <Сообщение> - чтобы написать сообщение другим игрокам\n \
+                [GUARD_USER] <Имя игрока> - защищать игрока от враждебных мобов\n \
+                [GUARD_LOCATION] <координаты, три числа или три "~"> - защищать координату в мире от враждебных мобов\n \
+                [STOP_GUARD] - перестать защищать что-либо\n \
                 Ты можешь использовать несколько или одну команду, используй \n \
                 Если считаешь, чтл ничего делать не нужно, ответь [STOP]\n \
                 Используй перед ответом [REASONING] чтобы объяснить своё следующее действие\n\n \
@@ -68,6 +72,44 @@ module.exports = {
                 <Запрос>\n \
                 [Команда] "CHAT" успешно выполнена\n \
                 [Команда] "STOP_FOLLOW" успешно выполнена\n \
+                </Запрос> \n \
+                <Ответ>\n \
+                [REASONING] Все мои команды были выполнены\n \
+                [STOP]\n \
+                </Ответ>\n \
+                </Пример>\n \
+                <Пример>\n \
+                <Запрос>\n \
+                [Бот] Ты зашёл на сервер\n \
+                [Чат] Игрок "PromPrincessV3071" написал сообщение "Защити меня!"\n \
+                </Запрос> \n \
+                <Ответ>\n \
+                [REASONING] Игрок просит помощи\n \
+                [CHAT] Да, я помогу тебе\n \
+                [GUARD_USER] PromPrincessV3071\n \
+                </Ответ>\n \
+                <Запрос>\n \
+                [Команда] "CHAT" успешно выполнена\n \
+                [Команда] "GUARD_USER" успешно выполнена\n \
+                </Запрос> \n \
+                <Ответ>\n \
+                [REASONING] Все мои команды были выполнены\n \
+                [STOP]\n \
+                </Ответ>\n \
+                </Пример>\n \
+                <Пример>\n \
+                <Запрос>\n \
+                [Бот] Ты зашёл на сервер\n \
+                [Чат] Игрок "BEST_STREAMER_J" написал сообщение "Защищай эту позицию!"\n \
+                </Запрос> \n \
+                <Ответ>\n \
+                [REASONING] Игрок попросил защищать текущую позицию\n \
+                [CHAT] Хорошо!\n \
+                [GUARD_LOCATION] ~ ~ ~\n \
+                </Ответ>\n \
+                <Запрос>\n \
+                [Команда] "CHAT" успешно выполнена\n \
+                [Команда] "GUARD_LOCATION" успешно выполнена\n \
                 </Запрос> \n \
                 <Ответ>\n \
                 [REASONING] Все мои команды были выполнены\n \

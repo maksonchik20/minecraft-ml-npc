@@ -1,4 +1,4 @@
-const { isEntityLookingAtBot } = require("../../modules/functions");
+const { isEntityLookingAtBot } = require("../../../modules/functions");
 
 function add(console, bot) {
 
@@ -81,7 +81,6 @@ function add(console, bot) {
         }
     }
 
-    bot.behaviors.interest = {}
     bot.behaviors.interest.isEntityIntrested = isEntityIntrested
 
     bot.behaviors.looking.preferSelectingFuncs.push(() => {

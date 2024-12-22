@@ -71,6 +71,14 @@ function add(console, bot) {
                 break;
         }
     })
+
+    bot.on('startedAttacking', () => {
+        bot.behaviors.fighting = true;
+    })
+
+    bot.on('stoppedAttacking', () => {
+        bot.behaviors.fighting = false;
+    })
 }
 
 module.exports = add

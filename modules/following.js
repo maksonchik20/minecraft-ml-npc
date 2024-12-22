@@ -2,7 +2,7 @@ const { goals: { GoalNear } } = require('mineflayer-pathfinder');
 
 function add(console, bot) {
 
-    let rangeFollow = 3
+    const rangeFollow = 3
     let followPoll = null
 
     bot.behaviors.follow = {}
@@ -13,6 +13,7 @@ function add(console, bot) {
     }
 
     bot.behaviors.follow.startFollowing = (target) => {
+        bot.emit('startFollow', target)
         if(followPoll != null) {
             bot.behaviors.follow.stopFollowing();
         }
@@ -22,6 +23,7 @@ function add(console, bot) {
     }
 
     bot.behaviors.follow.stopFollowing = () => {
+        bot.emit('stopFollow', bot.behaviors.follow.target)
         bot.behaviors.follow.target = null;
         currentGoal = null;
         clearInterval(followPoll)
@@ -76,10 +78,8 @@ function add(console, bot) {
 
             if(bot.pathfinder.goal == null || bot.pathfinder.goal == undefined) {
                 bot.pathfinder.setGoal(goal)
-                walking = true
             } else if (distance(bot.pathfinder.goal, goal) > 2.0) {
                 bot.pathfinder.setGoal(goal)
-                walking = true
             }
         } else {
             console.log('Lost target...')

@@ -1,9 +1,7 @@
-const { createGoal } = require("./goals")
+const { createGoal } = require("../lib/goals")
 
 function add(console, bot) {
     global.goalLastID = 0;
-
-    bot.behaviors.goals = {}
 
     bot.behaviors.goals.goal = createGoal(bot, {
             type: 'complex',
@@ -34,7 +32,7 @@ function add(console, bot) {
         bot.behaviors.goals.goal.goals = bot.behaviors.goals.goal.goals.filter((goal) => {
             return goal.id != id
         })
-        console.log('removed goal? size ' + bot.behaviors.goals.goal.goals.length.toString())
+        //console.log('removed goal? size ' + bot.behaviors.goals.goal.goals.length.toString())
     }
 
     bot.behaviors.goals.goal.execute(bot, bot.behaviors.goals.goal);

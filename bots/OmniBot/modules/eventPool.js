@@ -9,8 +9,6 @@ async function add(console, bot) {
     let idleCycles = 0
     const maxIdleCycles = 10
     
-    bot.behaviors.eventPool = {}
-    
     bot.behaviors.eventPool.pending = false;
     let pool = []
     bot.behaviors.eventPool.pool = []
@@ -40,9 +38,12 @@ async function add(console, bot) {
     }
 
     let commandSchemas = {
-        'FOLLOW': require('./commands/FOLLOW'),
-        'STOP_FOLLOW': require('./commands/STOP_FOLLOW'),
-        'CHAT': require('./commands/CHAT'),
+        'FOLLOW': require('../commands/FOLLOW'),
+        'STOP_FOLLOW': require('../commands/STOP_FOLLOW'),
+        'CHAT': require('../commands/CHAT'),
+        'GUARD_USER': require('../commands/GUARD_USER'),
+        'GUARD_LOCATION': require('../commands/GUARD_LOCATION'),
+        'STOP_GUARD': require('../commands/STOP_GUARD'),
         'REASONING': {
             validator: (text='') => {
                 if(text.split(/[\t\n\r ]/).length < 2)
