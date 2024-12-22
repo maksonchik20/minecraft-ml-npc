@@ -43,5 +43,5 @@ index 578e5a52..6ceca9d4 100644
 +    }
  
      if (force) {
-       lastSentYaw = yaw
+     lastSentYaw = yaw
 -- 

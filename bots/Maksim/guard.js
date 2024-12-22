@@ -3,7 +3,7 @@ const { Movements, goals } = require('mineflayer-pathfinder')
 function guardArea(bot, username, protect_player) {
     const player = bot.players[username]
     let position = player.entity.position
-    if (protect_player !== null) {
+    if (protect_player) {
         bot.protect_player = username
         bot.guardPos = position;
     } else {
@@ -15,7 +15,7 @@ function guardArea(bot, username, protect_player) {
     }
 }
 
-function stopGuarding (bot) {
+function stopGuarding(bot) {
     bot.guardPos = null
     bot.pvp.stop()
     bot.pathfinder.setGoal(null)
