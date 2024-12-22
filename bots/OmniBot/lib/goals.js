@@ -46,10 +46,10 @@ function createGoal(bot, options) {
                 goal.paused = true;
             }
         },  
-        complex: require('./goals/complex'),
+        complex: require('../goals/complex'),
         guard: require('../goals/guard'),
-        explore:reqire('./goals/explore'),
-        idle: require('./goals/idle')
+        explore: require('../goals/explore'),
+        idle: require('../goals/idle')
     }
 
     if(!options)
@@ -68,11 +68,13 @@ function createGoal(bot, options) {
             goal.target = options.target
             goal.lost = (goal.target.notReal != undefined) ? true : false
             bot.on('entityGone', (entity) => {
+                if(entity == undefined) return;
                 if(entity.username == goal.target.username) {
                     goal.lost = true;
                 }
             })
             bot.on('entitySpawn', (entity) => {
+                if(entity == undefined) return;
                 if(entity.username == goal.target.username) {
                     goal.lost = false;
                 }
@@ -86,7 +88,7 @@ function createGoal(bot, options) {
         case 'idle':
             return goal;
         case 'guard':
-            if(!options.locked_position) {
+            if(options.locked_position == false) {
                 goal.guard_target = options.guard_target
                 goal.locked_position = false
             } else {

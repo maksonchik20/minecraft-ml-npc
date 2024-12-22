@@ -1,4 +1,5 @@
-const fs = require('fs')
+const fs = require('fs');
+const { Movements } = require('mineflayer-pathfinder');
 
 function add(console, bot) {
     try {
@@ -18,7 +19,7 @@ function add(console, bot) {
     bot.behaviors.eventPool = {}
     bot.behaviors.interest = {}
     bot.behaviors.goals = {}
-    
+
     bot.pathfinder.setMovements(new Movements(bot))
 }
 

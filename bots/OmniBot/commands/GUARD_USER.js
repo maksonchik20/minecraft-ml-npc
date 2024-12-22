@@ -1,4 +1,4 @@
-const { createGoal } = require("./../goals");
+const { createGoal } = require("./../lib/goals");
 const STOP_GUARD = require("./STOP_GUARD");
 
 module.exports = {
@@ -32,7 +32,7 @@ module.exports = {
         console.log('creating goal!')
         bot.behaviors.goals.goal.goals.push(createGoal(bot, {
             type: 'follow',
-            guard_target: entity
+            target: entity
         }))
         console.log('creating goal!')
         bot.behaviors.goals.goal.goals.push(createGoal(bot, {

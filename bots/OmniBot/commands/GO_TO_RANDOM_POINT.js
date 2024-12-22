@@ -1,4 +1,4 @@
-const {createGoal} = require('../goals.js')
+const {createGoal} = require('../lib/goals')
 module.exports = {
     validator: (text='') => {
         if(text.split(/[\t\n\r ]/).length != 1)

@@ -3,7 +3,7 @@ const { goals } = require("mineflayer-pathfinder");
 module.exports = {
     paused: true,
     priority: (bot, goal) => {
-        let pos = (this.locked_position ? this.position : this.guard_target.position)
+        let pos = (goal.locked_position ? goal.position : goal.guard_target.position)
         if(Object.values(bot.entities).filter((entity) => {
             return entity.type == 'hostile' && 
             entity.position.distanceTo(pos) < 16 &&
@@ -17,12 +17,12 @@ module.exports = {
     execute: (bot, goal) => {
         if(!goal.paused) return;
         goal.paused = false;
-        this.guard_poll = setInterval(() => {
+        let goal_pollFunc = () => {
             if(!bot.behaviors.fighting) {
-                let pos = (this.locked_position ? this.position : this.guard_target.position)
+                let pos = (goal.locked_position == true ? goal.position : goal.guard_target.position)
                 let sel = Object.values(bot.entities).filter((entity) => {
                     return entity.type == 'hostile' && 
-                    entity.position.distanceTo(pos) < 7 &&
+                    entity.position.distanceTo(pos) < 16 &&
                     entity.displayName !== 'Armor Stand'
                 })
                 if(sel.length > 0) {
@@ -33,21 +33,22 @@ module.exports = {
                     })
                     bot.pvp.attack(target)
                 } else {
-                    let goal = new GoalNear(targetX, targetY, targetZ, 3.0)
+                    let nngoal = new GoalNear(targetX, targetY, targetZ, 3.0)
 
                     if(bot.pathfinder.goal == null || bot.pathfinder.goal == undefined) {
-                        bot.pathfinder.setGoal(goal)
-                    } else if (distance(bot.pathfinder.goal, goal) > 2.0) {
-                        bot.pathfinder.setGoal(goal)
+                        bot.pathfinder.setGoal(nngoal)
+                    } else if (distance(bot.pathfinder.goal, nngoal) > 2.0) {
+                        bot.pathfinder.setGoal(nngoal)
                     }
                 }
             }
-        }, 50)
+        }
+        goal.guard_poll = setInterval(goal_pollFunc.bind(goal), 50)
     },
     pause: (bot, goal) => {
         if(goal.paused) return;
         goal.paused = true;
-        clearInterval(this.guard_poll)
+        clearInterval(goal.guard_poll)
         bot.pvp.stop()
     },
     locked_position: false,

@@ -21,11 +21,11 @@ async function add(console, bot) {
     }
 
     let memory = []
-    memory = JSON.parse(await fs.readFile('./bots/Cyn/memory/history.json')).messages
+    memory = JSON.parse(await fs.readFile(`./bots/${bot.config.settings.username}/memory/history.json`)).messages
 
     bot.on('end', async () => {
         bot.behaviors.eventPool.addEvent('Бот', 'Ты покинул игру')
-        await fs.writeFile('./bots/Cyn/memory/history.json', JSON.stringify({messages: memory}, null, 4));
+        await fs.writeFile(`./bots/${bot.config.settings.username}/memory/history.json`, JSON.stringify({messages: memory}, null, 4));
     })
 
     let gptAnswer = (text='') => {
