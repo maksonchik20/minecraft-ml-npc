@@ -16,6 +16,7 @@ module.exports = {
         if(bot.behaviors.follow.target.username == goal.target.username)
             bot.behaviors.follow.stopFollowing();
     },
+    
     target: undefined,
     lost: false
 }
