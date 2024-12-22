@@ -19,31 +19,6 @@ function add(console, bot) {
         bot.chat('I want eat')
         console.error('Eating failed:', error)
     })
-    // bot.on('spawn', () => {
-    // console.log('I SPAWN FOR EAT!')
-    // bot.autoEat.options = {
-    //     priority: 'foodPoints',
-    //     startAt: 14,
-    //     bannedFood: []
-    // }
-    //   })
-    
-    // bot.on('autoeat_started', () => {
-    //     console.log('Eat started!')
-    // })
-    
-    // bot.on('autoeat_stopped', () => {
-    //     console.log('Eat stopped!')
-    // })
-    
-    // bot.on('health', () => {
-    //     if (bot.food === 20) {
-    //         bot.autoEat.disable()
-    //     } else {
-    //         bot.autoEat.enable()
-    //     }
-    // })
-
 }
 
 module.exports = add
