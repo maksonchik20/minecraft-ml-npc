@@ -19,12 +19,12 @@ module.exports = {
                     for(let i = 0; i<word.length; i += 250) {
                         nline = word.substring(i, Math.min(i + 250, word.length))
                         if(nline == 250) {
-                            nlines.push(nline)
+                            nlines.push(nline.trim())
                             nline = ''
                         }
                     }
                 } else {
-                    nlines.push(nlines)
+                    nlines.push(nline.trim())
                     nline = word
                 }
             })
