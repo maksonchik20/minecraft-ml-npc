@@ -11,7 +11,7 @@ module.exports = {
         }).length == 0 || bot.player.entity.position.distanceTo(pos) > 16) {
             return 45;
         }
-        if(!paused || bot.player.entity.position.distanceTo(pos) < 7)
+        if(!goal.paused || bot.player.entity.position.distanceTo(pos) < 7)
             return 55;
     },
     execute: (bot, goal) => {

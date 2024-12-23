@@ -18,7 +18,7 @@ module.exports = {
 
         let entity = bot.players[args].entity
 
-        if(bot.players[args].entity == null) {
+        if(entity == null) {
             console.log('Player ' + args + ' is too far!');
             entity = {
                 position: bot.player.entity.position,

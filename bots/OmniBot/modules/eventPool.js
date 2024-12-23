@@ -25,7 +25,7 @@ async function add(console, bot) {
 
     bot.on('end', async () => {
         bot.behaviors.eventPool.addEvent('Бот', 'Ты покинул игру')
-        await fs.writeFile(`./bots/${bot.config.settings.username}/memory/history.json`, JSON.stringify({messages: memory}, null, 4));
+        bot.behaviors.eventPool.writeHandle = fs.writeFile(`./bots/${bot.config.settings.username}/memory/history.json`, JSON.stringify({messages: memory}, null, 4));
     })
 
     let gptAnswer = (text='') => {

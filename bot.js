@@ -6,6 +6,10 @@ const pvp = require('mineflayer-pvp').plugin;
 const add_default_behaviors = require('./modules/loadBehaviors.js')
 const fs = require('fs/promises');
 const { createConsole } = require('./modules/functions.js');
+let why = () => {console.log("oops")}
+import('why-is-node-running').then((res) => {
+    why = res.default
+})
 
 let bot = undefined;
 let console = undefined;
@@ -33,17 +37,29 @@ async function createBot(config) {
 
     process.on('exit', async () => {
         bot.end('botClosed')
+        why()
+        await bot.behaviors.eventPool.writeHandle;
+        process.exit(0)
     })
 
     process.on('SIGINT', async () => {
         bot.end('botClosed')
+        why()
+        await bot.behaviors.eventPool.writeHandle;
+        process.exit(0)
     });
 
     process.on('SIGUSR1', async () => {
         bot.end('botClosed')
+        why()
+        await bot.behaviors.eventPool.writeHandle;
+        process.exit(0)
     });
     process.on('SIGUSR2', async () => {
         bot.end('botClosed')
+        why()
+        await bot.behaviors.eventPool.writeHandle;
+        process.exit(0)
     });
 
     bot.on('end', (res) => {
