@@ -54,7 +54,7 @@ function createGoal(bot, options) {
 
     if(!options)
         throw new Error(`options is empty!`);
-    goal = {}
+    let goal = {}
     if(goalsTypes[options.type]) {
         goal = Object.create(goalsTypes[options.type])
         goal.type = options.type
