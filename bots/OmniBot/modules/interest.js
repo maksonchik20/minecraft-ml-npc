@@ -8,8 +8,12 @@ function add(console, bot) {
     const defaultInterest = 30
 
     function isEntityIntrested(entity) {
-        if(bot.behaviors.follow.isFollowingEntity(entity))
+        if(bot.behaviors.goals.goal.goals.filter((_goal) => {
+            return (_goal.type == 'follow' && (entity == _goal.target || entity.username == _goal.target.username)) ||
+            (_goal.type == 'guard' && !_goal.locked_position && (_goal.guard_target == entity || _goal.guard_target.username == entity.username))
+        }).length != 0) {
             return true;
+        }
         return interestedEntities.filter((interest) => {
             return (interest.entity == entity || interest.entity.username == entity.username)
         }).length != 0
@@ -30,25 +34,31 @@ function add(console, bot) {
     function addInterest(entity) {
         if(updateInterest(entity)) return
         console.log('Entity is interest in me!')
-        interestedEntities.push({
-            cycles: defaultInterest,
-            entity: entity
-        })
-        switch (entity.type) {
-            case 'player':
-                bot.behaviors.eventPool.addEvent('Сущность', `Игрок "${entity.username}" смотрит на бота или назвал его имя`);
-                break;
-            case 'animal':
-                bot.behaviors.eventPool.addEvent('Сущность', `Животное "${entity.name}" смотрит на бота`);
-                break;
-            case 'hostile':
-                bot.behaviors.eventPool.addEvent('Сущность', `Враждебная сущность "${entity.name}" смотрит на бота`);
-                break;
-            default:
-                bot.behaviors.eventPool.addEvent('Сущность', `Cущность "${entity.name}" смотрит на бота`);
-                break;
+        if(isEntityIntrested(entity)) {
+            interestedEntities.push({
+                cycles: defaultInterest,
+                entity: entity
+            })
+        } else {
+            interestedEntities.push({
+                cycles: defaultInterest,
+                entity: entity
+            })
+            switch (entity.type) {
+                case 'player':
+                    bot.behaviors.eventPool.addEvent('Сущность', `Игрок "${entity.username}" смотрит на бота или назвал его имя`);
+                    break;
+                case 'animal':
+                    bot.behaviors.eventPool.addEvent('Сущность', `Животное "${entity.name}" смотрит на бота`);
+                    break;
+                case 'hostile':
+                    bot.behaviors.eventPool.addEvent('Сущность', `Враждебная сущность "${entity.name}" смотрит на бота`);
+                    break;
+                default:
+                    bot.behaviors.eventPool.addEvent('Сущность', `Cущность "${entity.name}" смотрит на бота`);
+                    break;
+            }
         }
-        
     }
 
     function removeInterest(entity) {
@@ -119,8 +129,12 @@ function add(console, bot) {
         let toPop = []
         interestedEntities.forEach((interest) => {
             interest.cycles--;
-            if(bot.behaviors.follow.isFollowingEntity(interest.entity))
-                interest.cycles = defaultInterest;
+            if(bot.behaviors.goals.goal.goals.filter((_goal) => {
+                return (_goal.type == 'follow' && (entity == _goal.target || entity.username == _goal.target.username)) ||
+                (_goal.type == 'guard' && !_goal.locked_position && (_goal.guard_target == entity || _goal.guard_target.username == entity.username))
+            }).length != 0) {
+                interest.cycles = defaultInterest
+            }
             if(interest.cycles == 0)
                 toPop.push(interest.entity)
         })
