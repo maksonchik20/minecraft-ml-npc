@@ -21,9 +21,9 @@ module.exports = {
             dstr.forEach((_goal) => {
                 _goal.pause.bind(_goal)(bot, _goal)
             })
-            console.log('Available goals:')
+            //console.log('Available goals:')
             goal.goals.forEach(_goal => {
-                console.log(`${_goal.type} ${_goal.priority.bind(_goal)(bot, _goal)}`)
+                //console.log(`${_goal.type} ${_goal.priority.bind(_goal)(bot, _goal)}`)
                 if(to_start == null)
                     to_start = _goal
                 else if(to_start.priority.bind(to_start)(bot, to_start) < _goal.priority.bind(_goal)(bot, _goal))
@@ -36,11 +36,11 @@ module.exports = {
             if(to_start == null)
                 return;
             if(goal.current == null) {
-                console.log(`Changed goal to ${to_start.type}`)
+                //console.log(`Changed goal to ${to_start.type}`)
                 goal.current = to_start;
                 goal.current.execute.bind(goal.current)(bot, goal.current)
             } else if(to_start.id != goal.current.id) {
-                console.log(`Changed goal from ${goal.current.type} to ${to_start.type}`)
+                //console.log(`Changed goal from ${goal.current.type} to ${to_start.type}`)
                 goal.current.pause.bind(goal.current)(bot, goal.current);
                 goal.current = to_start;
                 goal.current.execute.bind(goal.current)(bot, goal.current);

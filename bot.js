@@ -38,23 +38,27 @@ async function createBot(config) {
     process.on('exit', async () => {
         bot.end('botClosed')
         why()
+        await bot.behaviors.eventPool.writeHandle;
         process.exit(0)
     })
 
     process.on('SIGINT', async () => {
         bot.end('botClosed')
         why()
+        await bot.behaviors.eventPool.writeHandle;
         process.exit(0)
     });
 
     process.on('SIGUSR1', async () => {
         bot.end('botClosed')
         why()
+        await bot.behaviors.eventPool.writeHandle;
         process.exit(0)
     });
     process.on('SIGUSR2', async () => {
         bot.end('botClosed')
         why()
+        await bot.behaviors.eventPool.writeHandle;
         process.exit(0)
     });
 
