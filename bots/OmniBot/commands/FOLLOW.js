@@ -1,4 +1,5 @@
-const { createGoal } = require("./../goals");
+const { createGoal } = require("../lib/goals");
+const STOP_FOLLOW = require("./STOP_FOLLOW");
 
 module.exports = {
     validator: (text='') => {
@@ -21,6 +22,9 @@ module.exports = {
                 notReal: true
             }
         }
+
+        STOP_FOLLOW.execute(bot)
+
         console.log('creating goal!')
         bot.behaviors.goals.goal.goals.push(createGoal(bot, {
             type: 'follow',

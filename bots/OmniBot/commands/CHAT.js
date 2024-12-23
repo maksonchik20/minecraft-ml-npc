@@ -29,7 +29,7 @@ module.exports = {
                 }
             })
             if(nline != '')
-                nlines.push(nline)
+                nlines.push(nline.trim())
         })
         let promises = []
         let lst = 0

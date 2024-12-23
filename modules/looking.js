@@ -15,14 +15,13 @@ async function add(console, bot) {
     bot.behaviors.looking.setting.minCycles = 3;
 
     bot.behaviors.looking.target = null
-    bot.behaviors.walking = false
 
     bot.behaviors.looking.isLookingFor = () => {
         return bot.behaviors.looking.target != null
     }
 
     bot.behaviors.looking.canLook = () => {
-        return !bot.behaviors.walking;
+        return !bot.behaviors.walking && !bot.behaviors.fighting && !bot.behaviors.mining;
     }
 
     bot.behaviors.looking.stopLooking = () => {
@@ -131,11 +130,11 @@ async function add(console, bot) {
     }
 
     bot.on('goal_reached', () => {
-        bot.behaviors.walking = false
+        bot.behaviors.walking = false;
     })
 
     bot.on('goal_updated', () => {
-        bot.behaviors.walking = true
+        bot.behaviors.walking = true;
     })
 
     bot.on('end', () => {

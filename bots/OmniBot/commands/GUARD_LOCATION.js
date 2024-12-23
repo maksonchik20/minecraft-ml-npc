@@ -1,28 +1,40 @@
-const { username } = require("../goals/GUARD_LOCATION");
-const { createGoal } = require("./../goals");
+const { createGoal } = require("../lib/goals");
+const STOP_GUARD = require("./STOP_GUARD");
 
 module.exports = {
     validator: (text='') => {
-        if(text.split(/[\t\n\r ]/).length != 2)
+        if(text.split(/[\t\n\r ]/).length != 1 && text.split(/[\t\n\r ]/).length != 4)
             return false;
+        let args = text.split(/[\t\n\r ]/)
+        for(let i = 1; i<text.length; ++i) {
+            if(!isFinite(args[i]) && !(args[i] == '~')) {
+                return false;
+            }
+        }
         return true;
     },
     execute: (bot, args) => {
-        console.log('Player to GUARD_LOCATION ' + args)
-        if (bot.players[args] == undefined || bot.players[args] == null) {
-            bot.behaviors.eventPool.addEvent('Команда', `"GUARD_LOCATION" не выполнена. Игрок "${args}" не найден`);
-            return;
+        let strs = args.split(/[\t\n\r ]/)
+        let positon = bot.player.entity.positon
+        if(strs.length == 3) {
+            if(isFinite(strs[0])) {
+                positon.x = Number.parseFloat(strs[0])
+            }
+            if(isFinite(strs[1])) {
+                positon.y = Number.parseFloat(strs[1])
+            }
+            if(isFinite(strs[2])) {
+                positon.z = Number.parseFloat(strs[2])
+            }
         }
-        if(bot.players[args].entity == null) {
-            bot.behaviors.eventPool.addEvent('Команда', `"GUARD_LOCATION" не выполнена. Игрок "${args}" слишком далеко`);
-            console.log('Player ' + args + ' is too far!');
-            return;
-        }
+
+        STOP_GUARD.execute(bot)
+
         console.log('creating goal!')
         bot.behaviors.goals.goal.goals.push(createGoal(bot, {
             type: 'guard',
-            username: args,
-            protect_user: false
+            position: position,
+            locked_position: true
         }))
         console.log('adding callback event!');
         bot.behaviors.eventPool.addEvent('Команда', '"GUARD_LOCATION" успешно выполнена');

@@ -90,6 +90,14 @@ function add(console, bot) {
                 break
         }
     })
+
+    bot.on('startFollow', (entity) => {
+        bot.behaviors.walking = true;
+    })
+
+    bot.on('stopFollow', (entity) => {
+        bot.behaviors.walking = false;
+    })
 }
 
 module.exports = add

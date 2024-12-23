@@ -3,7 +3,7 @@ module.exports = {
     priority: (bot, goal) => {
         if(goal.lost)
             return 5;
-        return 90;
+        return 50;
     },
     execute: (bot, goal) => {
         if(!goal.paused) return;

@@ -1,5 +1,8 @@
 const mineflayer = require('mineflayer');
 const { pathfinder } = require('mineflayer-pathfinder');
+const pvp = require('mineflayer-pvp').plugin;
+//const collect_block = require('mineflayer-collectblock').plugin;
+//const auto_eat = require('mineflayer-auto-eat').loader;
 const add_default_behaviors = require('./modules/loadBehaviors.js')
 const fs = require('fs/promises');
 const { createConsole } = require('./modules/functions.js');
@@ -56,6 +59,7 @@ async function createBot(config) {
     })
 
     bot.loadPlugin(pathfinder)
+    bot.loadPlugin(pvp);
 
     bot.once('inject_allowed', () => {
         add_default_behaviors(createConsole(console, 'Default behaviors'), bot)
