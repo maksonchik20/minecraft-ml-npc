@@ -44,6 +44,7 @@ async function add(console, bot) {
         'GUARD_USER': require('../commands/GUARD_USER'),
         'GUARD_LOCATION': require('../commands/GUARD_LOCATION'),
         'STOP_GUARD': require('../commands/STOP_GUARD'),
+        'COLLECT_BLOCKS': require('../commands/COLLECT_BLOCKS'),
         'REASONING': {
             validator: (text='') => {
                 if(text.split(/[\t\n\r ]/).length < 2)

@@ -128,10 +128,11 @@ function add(console, bot) {
     cyclePoll = setInterval(() => {
         let toPop = []
         interestedEntities.forEach((interest) => {
-            interest.cycles--;
+            if(interest.cycles > 0)
+                interest.cycles--;
             if(bot.behaviors.goals.goal.goals.filter((_goal) => {
-                return (_goal.type == 'follow' && (entity == _goal.target || entity.username == _goal.target.username)) ||
-                (_goal.type == 'guard' && !_goal.locked_position && (_goal.guard_target == entity || _goal.guard_target.username == entity.username))
+                return (_goal.type == 'follow' && (interest.entity == _goal.target || interest.entity.username == _goal.target.username)) ||
+                (_goal.type == 'guard' && !_goal.locked_position && (_goal.guard_target == interest.entity || _goal.guard_target.username == interest.entity.username))
             }).length != 0) {
                 interest.cycles = defaultInterest
             }
