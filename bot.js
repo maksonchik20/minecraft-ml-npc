@@ -39,27 +39,35 @@ async function createBot(config) {
         bot.end('botClosed')
         why()
         await bot.behaviors.eventPool.writeHandle;
-        process.exit(0)
     })
 
     process.on('SIGINT', async () => {
         bot.end('botClosed')
         why()
         await bot.behaviors.eventPool.writeHandle;
-        process.exit(0)
     });
 
     process.on('SIGUSR1', async () => {
         bot.end('botClosed')
         why()
         await bot.behaviors.eventPool.writeHandle;
-        process.exit(0)
     });
     process.on('SIGUSR2', async () => {
         bot.end('botClosed')
         why()
         await bot.behaviors.eventPool.writeHandle;
-        process.exit(0)
+    });
+
+    process.stdin.on('data', (data) => {
+        let inp = data.toString('utf8')  
+        inp = inp.trim()
+
+        switch (inp) {
+            case 'forceClose':
+                process.exit(0)
+            default:
+                break;
+        }
     });
 
     bot.on('end', (res) => {
