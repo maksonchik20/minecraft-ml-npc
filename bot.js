@@ -1,4 +1,4 @@
-const mineflayer = require('mineflayer');
+const mineflayer = require('mineflayer')
 const { pathfinder } = require('mineflayer-pathfinder');
 const pvp = require('mineflayer-pvp').plugin;
 //const collect_block = require('mineflayer-collectblock').plugin;
@@ -22,7 +22,7 @@ async function startLogs() {
 
     console.log('Starting logs')
 
-    process.stdout.write = process.stderr.write = logs.write.bind(logs)
+    //process.stdout.write = process.stderr.write = logs.write.bind(logs)
 
     process.on('uncaughtException', function(err) {
         console.error((err && err.stack) ? err.stack : err);
