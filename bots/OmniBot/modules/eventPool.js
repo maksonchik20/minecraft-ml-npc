@@ -30,8 +30,8 @@ async function add(console, bot) {
 
     let gptAnswer = (text='') => {
         let lines = text.split('\n');
-        lines.forEach((text) => {
-            if((!(/^\[([A-Za-z0-9_]+)\] .+$/.test(text.trim()))) && (!(/^\[([A-Za-z0-9_]+)\]$/.test(text.trim())))) {
+        lines.forEach((textt) => {
+            if((!(/^\[([A-Za-z0-9_]+)\] .+$/.test(textt.trim()))) && (!(/^\[([A-Za-z0-9_]+)\]$/.test(textt.trim()))) && (!(text.trim() != ''))) {
                 throw new Error('Неправильный формат ответа');
             }
         })
@@ -44,6 +44,7 @@ async function add(console, bot) {
         'GUARD_USER': require('../commands/GUARD_USER'),
         'GUARD_LOCATION': require('../commands/GUARD_LOCATION'),
         'STOP_GUARD': require('../commands/STOP_GUARD'),
+        'GO_TO_RANDOM_POINT': require('../commands/GO_TO_RANDOM_POINT'),
         'COLLECT_BLOCKS': require('../commands/COLLECT_BLOCKS'),
         'REASONING': {
             validator: (text='') => {
@@ -66,6 +67,7 @@ async function add(console, bot) {
     }
 
     function validateCommand(text) {
+        if(text == '') return;
         let command_type = /^\[([A-Za-z0-9_]+)\].*$/.exec(text.trim())
         if(command_type.length < 2)
             throw new Error(`Команда "${obj.command_type}" в неправильном формате, попробуй ещё раз`)
@@ -80,6 +82,7 @@ async function add(console, bot) {
     }
 
     function runCommand(text) {
+        if(text == '') return;
         let command_type = /^\[([A-Za-z0-9_]+)\](.*)$/.exec(text.trim())
         let commandArgs = command_type.length > 1 ? command_type[2].trim() : undefined;
         command_type = command_type[1];
@@ -96,13 +99,13 @@ async function add(console, bot) {
         }
 
         try {
-            gptAnswer(res)
+            gptAnswer(res.trim())
 
             let cmds = res.split('\n');
 
             if(res != undefined) {
                 cmds.forEach((cmd) => {
-                    validateCommand(cmd)
+                    validateCommand(cmd.trim())
                 })
             } else {
                 throw new Error('Ты используешь неправильный формат ответа, попробуй ещё раз')
@@ -132,9 +135,9 @@ async function add(console, bot) {
         }
         
         let messages = bot.config.startPrompt;
-        memory.forEach(message => {
-            messages.push(message)
-        });
+        for (let i = Math.max(0, memory.length - 5); i<memory.length; ++i) {
+            messages.push(memory[i]);
+        }
         
         let sendResult = await bot.behaviors.eventPool.sendToGpt(messages)
 
@@ -164,7 +167,7 @@ async function add(console, bot) {
             memory.push({role: 'assistant', text: (typeof sendResult.res == 'string') ? sendResult.res : JSON.stringify(sendResult.res)})
             commands = sendResult.res.split('\n');
             commands.forEach((cmd) => {
-                runCommand(cmd)
+                runCommand(cmd.trim())
             })
         }
 

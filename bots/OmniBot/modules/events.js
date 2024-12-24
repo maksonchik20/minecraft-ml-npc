@@ -28,7 +28,7 @@ function add(console, bot) {
         bot.behaviors.eventPool.addEvent(`Игрок`, `Игрок "${player.username}" вышел с сервера`);
     })
 
-    bot.on('entityHurt', (entity) => {
+    /*bot.on('entityHurt', (entity) => {
         console.log(entity.type + ' damaged!')
         switch (entity.type) {
             case 'player':
@@ -70,7 +70,7 @@ function add(console, bot) {
                 bot.behaviors.eventPool.addEvent('Сущность', `Cущность "${entity.name}" замахнулся рукой`);
                 break;
         }
-    })
+    })*/
 
     bot.on('startedAttacking', () => {
         bot.behaviors.fighting = true;

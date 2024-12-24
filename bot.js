@@ -1,4 +1,4 @@
-const mineflayer = require('mineflayer');
+const mineflayer = require('mineflayer')
 const { pathfinder } = require('mineflayer-pathfinder');
 const pvp = require('mineflayer-pvp').plugin;
 //const collect_block = require('mineflayer-collectblock').plugin;
@@ -22,7 +22,7 @@ async function startLogs() {
 
     console.log('Starting logs')
 
-    process.stdout.write = process.stderr.write = logs.write.bind(logs)
+    //process.stdout.write = process.stderr.write = logs.write.bind(logs)
 
     process.on('uncaughtException', function(err) {
         console.error((err && err.stack) ? err.stack : err);
@@ -39,27 +39,35 @@ async function createBot(config) {
         bot.end('botClosed')
         why()
         await bot.behaviors.eventPool.writeHandle;
-        process.exit(0)
     })
 
     process.on('SIGINT', async () => {
         bot.end('botClosed')
         why()
         await bot.behaviors.eventPool.writeHandle;
-        process.exit(0)
     });
 
     process.on('SIGUSR1', async () => {
         bot.end('botClosed')
         why()
         await bot.behaviors.eventPool.writeHandle;
-        process.exit(0)
     });
     process.on('SIGUSR2', async () => {
         bot.end('botClosed')
         why()
         await bot.behaviors.eventPool.writeHandle;
-        process.exit(0)
+    });
+
+    process.stdin.on('data', (data) => {
+        let inp = data.toString('utf8')  
+        inp = inp.trim()
+
+        switch (inp) {
+            case 'forceClose':
+                process.exit(0)
+            default:
+                break;
+        }
     });
 
     bot.on('end', (res) => {
