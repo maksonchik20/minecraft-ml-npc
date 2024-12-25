@@ -6,8 +6,9 @@ const { Movements, goals } = require('mineflayer-pathfinder')
 
 async function collectBlocks(bot, block, amount=1, block_result=null) {
     const blockType = bot.registry.blocksByName[block]
+    // console.log(block, amount, blockType)
     // const blockType = mcData.blocksByName[block]
-    console.log(blockType)
+    // console.log(blockType)
     for (let count = 0; count < amount; count++) {
         const block_needed = bot.findBlock({
             matching: blockType.id,

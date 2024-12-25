@@ -1,0 +1,48 @@
+{
+    "messages": [
+        {
+            "role": "user",
+            "text": "[{\"type\":\"event\",\"event_type\":\"bot_joined\"}]"
+        },
+        {
+            "role": "user",
+            "text": "[{\"type\":\"event\",\"event_type\":\"bot_joined\"}]"
+        },
+        {
+            "role": "user",
+            "text": "[{\"type\":\"event\",\"event_type\":\"bot_joined\"}]"
+        },
+        {
+            "role": "user",
+            "text": "[{\"type\":\"event\",\"event_type\":\"bot_joined\"}]"
+        },
+        {
+            "role": "user",
+            "text": "[{\"type\":\"event\",\"event_type\":\"bot_joined\"}]"
+        },
+        {
+            "role": "user",
+            "text": "[{\"type\":\"event\",\"event_type\":\"bot_joined\"}]"
+        },
+        {
+            "role": "user",
+            "text": "[{\"type\":\"event\",\"event_type\":\"bot_joined\"}]"
+        },
+        {
+            "role": "user",
+            "text": "[{\"type\":\"event\",\"event_type\":\"bot_joined\"}]"
+        },
+        {
+            "role": "user",
+            "text": "[{\"type\":\"event\",\"event_type\":\"bot_joined\"}]"
+        },
+        {
+            "role": "user",
+            "text": "[{\"type\":\"event\",\"event_type\":\"bot_joined\"}]"
+        },
+        {
+            "role": "user",
+            "text": "[Chat] Player \"maguuus\" send message \"say items\"\n"
+        }
+    ]
+}

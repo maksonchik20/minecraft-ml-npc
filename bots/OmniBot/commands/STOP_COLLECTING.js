@@ -6,15 +6,15 @@ module.exports = {
     },
     execute: (bot, args) => {
         let goalsToStop = bot.behaviors.goals.goal.goals.filter((_goal) => {
-            return _goal.type == 'follow' && (args != '' ? _goal.target.username === args : true)
+            return _goal.type === 'collect'
         })
         if(goalsToStop.length == 0) {
-            bot.behaviors.eventPool.addEvent('Команда', `"STOP_FOLLOW" не выполнена. Бот сейчас не следует за игроком "${args}".`);
+            bot.behaviors.eventPool.addEvent('Команда', `"STOP_COLLECTING" не выполнена. Бот сейчас не следует за игроком "${args}".`);
             return;
-        } 
+        }
         goalsToStop.forEach((goal) => {
             bot.behaviors.goals.removeGoal(goal);
         })
-        bot.behaviors.eventPool.addEvent('Команда', '"STOP_FOLLOW" успешно выполнена');
+        bot.behaviors.eventPool.addEvent('Команда', '"STOP_COLLECTING" успешно выполнена');
     }
 }

@@ -49,7 +49,8 @@ function createGoal(bot, options) {
         complex: require('../goals/complex'),
         guard: require('../goals/guard'),
         explore: require('../goals/explore'),
-        idle: require('../goals/idle')
+        idle: require('../goals/idle'),
+        collect: require('../goals/collect')
     }
 
     if(!options)
@@ -105,6 +106,10 @@ function createGoal(bot, options) {
             goal.goals = options.goals
             return goal;
         case 'explore':
+            return goal
+        case 'collect':
+            goal.block = options.block
+            goal.amount = options.amount
             return goal
         default:
             throw new Error(`${type} type of goal is not supported`);

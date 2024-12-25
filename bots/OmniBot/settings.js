@@ -1,7 +1,7 @@
 module.exports = {
     settings: {
         host: 'localhost',
-        port: 35825,
+        port: 25565,
         username: 'OmniBot'
     },
     additionalBehaviors: [
